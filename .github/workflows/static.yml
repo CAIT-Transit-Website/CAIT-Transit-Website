@@ -1,0 +1,55 @@
+name: Deploy static content to Pages
+
+on:
+  # Publish manual website edits.
+  push:
+    branches: ["main"]
+
+  # Publish after the analytics file has been updated.
+  workflow_run:
+    workflows: ["PiMS Analytics Sync"]
+    types: [completed]
+    branches: ["main"]
+
+  # Allow a manual deployment.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Skip deployment if the analytics sync failed.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest website and analytics
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
