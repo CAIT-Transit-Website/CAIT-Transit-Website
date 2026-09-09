@@ -1265,7 +1265,7 @@
                     <p class="eyebrow">Current Inventory Status</p>
 
                     <div class="dark-kpi-row">
-                        <div class="dark-kpi"><p class="val">138K</p>
+                        <div class="dark-kpi"><p class="val" id="total-po-qty">138K</p>
                             <p class="lbl">Total PO qty</p></div>
                         <div class="dark-kpi"><p class="val">121.3K</p>
                             <p class="lbl">Total on hand</p></div>
@@ -7533,6 +7533,45 @@
 
     renderAll();
 
+</script>
+<script>
+async function updateTotalPoQty() {
+    const card = document.getElementById("total-po-qty");
+    if (!card) return;
+
+    try {
+        const response = await fetch("./data/analytics.json", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Analytics request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const quantity = data.totalPoQty;
+
+        if (
+            typeof quantity !== "number" ||
+            !Number.isFinite(quantity) ||
+            quantity < 0
+        ) {
+            throw new Error("Invalid Total PO quantity");
+        }
+
+        card.textContent = new Intl.NumberFormat("en-US", {
+            notation: "compact",
+            maximumFractionDigits: 0
+        }).format(quantity);
+
+        card.title = `Total PO quantity: ${quantity.toLocaleString("en-US")}`;
+    } catch (error) {
+        console.error("Unable to update Total PO quantity:", error);
+        card.title = "Live update unavailable; showing the last displayed value.";
+    }
+}
+
+updateTotalPoQty();
 </script>
 
 </body>
