@@ -1,4 +1,2082 @@
 {
+  "schemaVersion": 2,
+  "exportedAtUtc": "2026-09-12T15:14:25.9181884Z",
   "totalPoQty": 138116,
-  "exportedAtUtc": "2026-09-12T14:00:08.4066019Z"
+  "totalOnHand": 121327,
+  "totalInventoryValue": 27102322.16,
+  "movement": {
+    "active": 59,
+    "slow": 46,
+    "obsolete": 0
+  },
+  "service": {
+    "risk": 93,
+    "covered": 13
+  },
+  "items": [
+    {
+      "item": "11990001.NEW",
+      "exposureItem": "11990001.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "WINDOW ASSY, DROP SASH CAB DOOR, ML",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 0,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "14000030.NEW",
+      "exposureItem": "14000030.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SDU, HORIZONTAL PTC TRAIN CONTROLS, COM",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 0,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "20827801.NEW",
+      "exposureItem": "20827801.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "SPRING ASSY, COUPLER, BEAM GUIDE, CO2, M",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -26,
+      "leadTime": 85,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "20990014.NEW",
+      "exposureItem": "20990014.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "ARM ASSY, SUSPENSION, PRI L1/R2/L3/R4, M",
+      "recStorage": "Pallet Storage",
+      "onHand": 0,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "20990015.NEW",
+      "exposureItem": "20990015.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "ARM ASSY, SUSPENSION, PRI R1/L2/R3/L4, M",
+      "recStorage": "Pallet Storage",
+      "onHand": 0,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "20990017.NEW",
+      "exposureItem": "20990017.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SPRING, OUTER, PRIMARY SUSPENSION, ML",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 0,
+      "usage": -22,
+      "leadTime": 111,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22000078.NEW",
+      "exposureItem": "22000078.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "J1-2-1",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -120,
+      "leadTime": 186.5,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22169527.NEW",
+      "exposureItem": "22169527.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Drawers",
+      "desc": "COVER, FULCRUM PIN, GO-5-1/2,GE-6, TREAD",
+      "recStorage": "Manual Review Required",
+      "onHand": 40,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22453241.NEW",
+      "exposureItem": "22453241.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Drawers",
+      "desc": "90 # Volume Check",
+      "recStorage": "Manual Review Required",
+      "onHand": 0,
+      "usage": -130,
+      "leadTime": 0,
+      "ratio": null,
+      "recordCount": 4
+    },
+    {
+      "item": "22458010.NEW",
+      "exposureItem": "22458010.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "J1 Relay",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 20,
+      "usage": -15,
+      "leadTime": 397.5,
+      "ratio": 0.75,
+      "recordCount": 4
+    },
+    {
+      "item": "22458010.NEW",
+      "exposureItem": "22458010.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "J1 Safety Valve 150 #",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 20,
+      "usage": -15,
+      "leadTime": 397.5,
+      "ratio": 0.75,
+      "recordCount": 4
+    },
+    {
+      "item": "22458294.NEW",
+      "exposureItem": "22458294.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Quick Service",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -75,
+      "leadTime": 312.5,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22458294.NEW",
+      "exposureItem": "22458294.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "B-1 Quick Service",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -75,
+      "leadTime": 312.5,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22458448.NEW",
+      "exposureItem": "22458448.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "N-1-E Magnet Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -270,
+      "leadTime": 160,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22458448.NEW",
+      "exposureItem": "22458448.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "N-1-E  Magnet Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -270,
+      "leadTime": 160,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22458903.NEW",
+      "exposureItem": "22458903.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "FA4 Magnet Valves (32V)",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 80,
+      "usage": -84,
+      "leadTime": 126,
+      "ratio": 1.05,
+      "recordCount": 2
+    },
+    {
+      "item": "22459347.NEW",
+      "exposureItem": "22459347.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "B-3-B Conductor Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 56,
+      "usage": -219,
+      "leadTime": 211,
+      "ratio": 3.91071428571429,
+      "recordCount": 2
+    },
+    {
+      "item": "22459347.NEW",
+      "exposureItem": "22459347.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "B3B Conductor",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 56,
+      "usage": -219,
+      "leadTime": 211,
+      "ratio": 3.91071428571429,
+      "recordCount": 4
+    },
+    {
+      "item": "22459470.NEW",
+      "exposureItem": "22459470.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "KIT, SLACK ADJUSTER TREAD BRAKE IMPROVED",
+      "recStorage": "Pallet Storage",
+      "onHand": 220,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22460148.NEW",
+      "exposureItem": "22460148.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "FILTER, OIL, WABTEC COMPRESSOR, ALP45/A/",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -75,
+      "leadTime": 113,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22460321.NEW",
+      "exposureItem": "22460321.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "ELEMENT, AIR FILTER, AUX AIR COMP, A46",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 4,
+      "usage": -120,
+      "leadTime": 125,
+      "ratio": 30,
+      "recordCount": 2
+    },
+    {
+      "item": "22521056.NEW",
+      "exposureItem": "22521056.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "PAWL, TREAD BRAKE - IMPROVED STYLE GE-6,",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -100,
+      "leadTime": 104.5,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22638439.NEW",
+      "exposureItem": "22638439.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "RETAINER, DUST BOOT, TREAD BRAKE GE-6, G",
+      "recStorage": "Manual Review Required",
+      "onHand": 520,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22814055.NEW",
+      "exposureItem": "22814055.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "SPRING, PAWL, TREAD BRAKE GE-6, GJ-5-1/2",
+      "recStorage": "Pallet Storage",
+      "onHand": 4160,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22844805.NEW",
+      "exposureItem": "22844805.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "1/2\u201d OC-1-A Filter Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -900,
+      "leadTime": 188.5,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "25794830.NEW",
+      "exposureItem": "25794830.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "DOOR, MOTOR COMP. ASSY, RIGHT, ML",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -40,
+      "leadTime": 299,
+      "ratio": null,
+      "recordCount": 3
+    },
+    {
+      "item": "25794833.NEW",
+      "exposureItem": "25794833.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "DOOR, MOTOR COMP. ASSY, LEFT, ML",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 0,
+      "usage": -16,
+      "leadTime": 291.5,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "29045000.NEW",
+      "exposureItem": "29045000.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "WHEEL, B/CLASS, 44\" W/PLATE HOLES, A45 -",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 0,
+      "usage": -10,
+      "leadTime": 272.5,
+      "ratio": null,
+      "recordCount": 3
+    },
+    {
+      "item": "29990001.NEW",
+      "exposureItem": "29990001.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "AXLE, FORGED CARBON STEEL, 7\" X 12\", ML.",
+      "recStorage": "Manual Review Required",
+      "onHand": 0,
+      "usage": -197,
+      "leadTime": 118.5,
+      "ratio": null,
+      "recordCount": 3
+    },
+    {
+      "item": "37725809.NEW",
+      "exposureItem": "37725809.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "OIL, HOUSEHOLD, MP, 3OZ CAN, LUBRICATES,",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 424,
+      "usage": -73,
+      "leadTime": 2.5,
+      "ratio": 0.172169811320755,
+      "recordCount": 1
+    },
+    {
+      "item": "43160751.NEW",
+      "exposureItem": "43160751.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "COTTER, 1/8\" X 1-1/2\", STEEL, EXTENDED P",
+      "recStorage": "Pallet Storage",
+      "onHand": 4160,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "45293501.NEW",
+      "exposureItem": "45293501.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Drawers",
+      "desc": "GAUGE, ROTOR HOLLOW WEAR, DISCS MADE OUT",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 0,
+      "usage": -26,
+      "leadTime": 26.5,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "47237018.NEW",
+      "exposureItem": "47237018.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DECAL, ROOF CUT TEXT CUT ALONG DOTTED LI",
+      "recStorage": "Pallet Storage",
+      "onHand": 200,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "47974147.NEW",
+      "exposureItem": "47974147.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DECAL, FLOOR, DOT, LUMINESCENT CHARGE OU",
+      "recStorage": "Pallet Storage",
+      "onHand": 2759,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22459753.NEW",
+      "exposureItem": "22459753.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "Actuators",
+      "recStorage": "Manual Review Required",
+      "onHand": null,
+      "usage": null,
+      "leadTime": null,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "29340815.NEW",
+      "exposureItem": "29340815.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "WHEEL, BLACK, B32CL-BR AAR APPR, WROUGHT",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 24,
+      "usage": -959,
+      "leadTime": 103.5,
+      "ratio": 39.9583333333333,
+      "recordCount": 10
+    },
+    {
+      "item": "20040968.NEW",
+      "exposureItem": "20040968.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "ABSORBER, SHOCK, HORIZONTAL, ALL COMETS",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 508,
+      "usage": -556,
+      "leadTime": 93.5,
+      "ratio": 1.09448818897638,
+      "recordCount": 2
+    },
+    {
+      "item": "20041164.NEW",
+      "exposureItem": "20041164.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "SHOCK ABSORBER, VERTICAL, ALL COMETS",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 421,
+      "usage": -825,
+      "leadTime": 130.5,
+      "ratio": 1.95961995249406,
+      "recordCount": 1
+    },
+    {
+      "item": "20238759.NEW",
+      "exposureItem": "20238759.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "BUMPER, LATERAL, RUBBER, TRUCK, CO2/4, 4",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 8,
+      "usage": -66,
+      "leadTime": 52,
+      "ratio": 8.25,
+      "recordCount": 1
+    },
+    {
+      "item": "25706033.NEW",
+      "exposureItem": "25706033.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "SENSOR, MAGNETIC PICK-UP, ELECTRICAL EQU",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -200,
+      "leadTime": 127,
+      "ratio": null,
+      "recordCount": 3
+    },
+    {
+      "item": "25990239.NEW",
+      "exposureItem": "25990239.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "BATTERY ASSY, W/10X5 CELL TRAYS, ML, 10-",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 14,
+      "usage": -177,
+      "leadTime": 215,
+      "ratio": 12.6428571428571,
+      "recordCount": 2
+    },
+    {
+      "item": "29990000.NEW",
+      "exposureItem": "29990000.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "WHEEL, WHITE, 36\", ML. SUPPLIER MUST MEE",
+      "recStorage": "Manual Review Required",
+      "onHand": 704,
+      "usage": -700,
+      "leadTime": 65,
+      "ratio": 0.994318181818182,
+      "recordCount": 15
+    },
+    {
+      "item": "11990014.NEW",
+      "exposureItem": "11990014.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "WINDSHIELD, ML",
+      "recStorage": "Pallet Storage",
+      "onHand": 7,
+      "usage": -15,
+      "leadTime": 138,
+      "ratio": 2.14285714285714,
+      "recordCount": 1
+    },
+    {
+      "item": "11990014.NEW",
+      "exposureItem": "11990014.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "WINDSHIELD, ML",
+      "recStorage": "Pallet Storage",
+      "onHand": 7,
+      "usage": -15,
+      "leadTime": 138,
+      "ratio": 2.14285714285714,
+      "recordCount": 1
+    },
+    {
+      "item": "12137020.NEW",
+      "exposureItem": "12137020.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "PAD, RADIUS ROD METAL BACKED NEOPRENE, R",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 780,
+      "usage": -1057,
+      "leadTime": 60.5,
+      "ratio": 1.35512820512821,
+      "recordCount": 2
+    },
+    {
+      "item": "19076553.NEW",
+      "exposureItem": "19076553.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "BOLT, TIE, OFF SNAP SPECIAL, CO2/4/5, RA",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 3237,
+      "usage": -5340,
+      "leadTime": 11,
+      "ratio": 1.64967562557924,
+      "recordCount": 1
+    },
+    {
+      "item": "20160250.NEW",
+      "exposureItem": "20160250.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "YOKE, COUPLER ASSY, CO2 SEC# 3/FIG# 1/IN",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 50,
+      "usage": -33,
+      "leadTime": 54.5,
+      "ratio": 0.66,
+      "recordCount": 1
+    },
+    {
+      "item": "20160251.NEW",
+      "exposureItem": "20160251.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "PIN, NEW COUPLER, CO2/4, SEC# 3/FIG# 1/",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 28,
+      "usage": -13,
+      "leadTime": 13.5,
+      "ratio": 0.464285714285714,
+      "recordCount": 1
+    },
+    {
+      "item": "20460015.NEW",
+      "exposureItem": "20460015.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Boneyard",
+      "desc": "PAD SET, BRAKE, SINTERED, LEAF, A45/46/4",
+      "recStorage": "Outside Scan - Boneyard Review",
+      "onHand": 1380,
+      "usage": -2723,
+      "leadTime": 7,
+      "ratio": 1.9731884057971,
+      "recordCount": 2
+    },
+    {
+      "item": "20608890.NEW",
+      "exposureItem": "20608890.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "PAD SET, BRAKE, ALL COMETS, SET INCLUDES",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 540,
+      "usage": -19532,
+      "leadTime": 157.5,
+      "ratio": 36.1703703703704,
+      "recordCount": 2
+    },
+    {
+      "item": "20620825.NEW",
+      "exposureItem": "20620825.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "PIN, HOLDING, PAWL, HANDBRAKE, MODIFICAT",
+      "recStorage": "Manual Review Required",
+      "onHand": 116,
+      "usage": -56,
+      "leadTime": 116,
+      "ratio": 0.482758620689655,
+      "recordCount": 1
+    },
+    {
+      "item": "20741305.NEW",
+      "exposureItem": "20741305.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Boneyard",
+      "desc": "SHOE, BRAKE 2\" W/REJECT LUG, AND END STO",
+      "recStorage": "Outside Scan - Boneyard Review",
+      "onHand": 1344,
+      "usage": -5880,
+      "leadTime": 39,
+      "ratio": 4.375,
+      "recordCount": 2
+    },
+    {
+      "item": "20803113.NEW",
+      "exposureItem": "20803113.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SHOE, BRAKE, V-490, CO2/4/5, 136/PALLET",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 1354,
+      "usage": -11024,
+      "leadTime": 52.5,
+      "ratio": 8.14180206794682,
+      "recordCount": 1
+    },
+    {
+      "item": "20803113.NEW",
+      "exposureItem": "20803113.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SHOE, BRAKE, V-490, CO2/4/5, 136/PALLET",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 1354,
+      "usage": -11024,
+      "leadTime": 52.5,
+      "ratio": 8.14180206794682,
+      "recordCount": 1
+    },
+    {
+      "item": "20803130.NEW",
+      "exposureItem": "20803130.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SHOE, BRAKE V-578, IN MODIFIED CRATE PRE",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 304,
+      "usage": -15803,
+      "leadTime": 16,
+      "ratio": 51.9835526315789,
+      "recordCount": 4
+    },
+    {
+      "item": "20807202.NEW",
+      "exposureItem": "20807202.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Boneyard",
+      "desc": "SHOE, BRAKE-SINTERED, LEAF SEASON, RA3,",
+      "recStorage": "Outside Scan - Boneyard Review",
+      "onHand": 1440,
+      "usage": -630,
+      "leadTime": 113.5,
+      "ratio": 0.4375,
+      "recordCount": 3
+    },
+    {
+      "item": "20990002.NEW",
+      "exposureItem": "20990002.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "SHOCK, ABSORBER, VERTICAL PRIMARY, SUSPE",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 383,
+      "usage": -334,
+      "leadTime": 108,
+      "ratio": 0.872062663185379,
+      "recordCount": 2
+    },
+    {
+      "item": "20990070.NEW",
+      "exposureItem": "20990070.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "PAD SET, BRAKE, ML, 240 PAIR/PLT",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 4320,
+      "usage": -49036,
+      "leadTime": 178.5,
+      "ratio": 11.3509259259259,
+      "recordCount": 2
+    },
+    {
+      "item": "20990070.NEW",
+      "exposureItem": "20990070.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "PAD SET, BRAKE, ML, 240 PAIR/PLT",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 4320,
+      "usage": -49036,
+      "leadTime": 178.5,
+      "ratio": 11.3509259259259,
+      "recordCount": 1
+    },
+    {
+      "item": "22028904.NEW",
+      "exposureItem": "22028904.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "BEARING, SPACER-OIL CUSHION, GE-6, GJ-5-",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -100,
+      "leadTime": 59.5,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22060911.NEW",
+      "exposureItem": "22060911.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "BOLT, GREASE FITTING, BRAKE HEAD GE-6 &",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 100,
+      "usage": -280,
+      "leadTime": 106,
+      "ratio": 2.8,
+      "recordCount": 1
+    },
+    {
+      "item": "22061301.NEW",
+      "exposureItem": "22061301.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "BOOT, DUST, TBU, GE6/GO5/GO5-1/2, NEW ST",
+      "recStorage": "Pallet Storage",
+      "onHand": 300,
+      "usage": -100,
+      "leadTime": 0,
+      "ratio": 0.333333333333333,
+      "recordCount": 1
+    },
+    {
+      "item": "22195430.NEW",
+      "exposureItem": "22195430.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "CUP, PACKING, 6\" DIA, GE-6 TB, TREAD BRA",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 2770,
+      "usage": -300,
+      "leadTime": 42.5,
+      "ratio": 0.108303249097473,
+      "recordCount": 1
+    },
+    {
+      "item": "22195430.NEW",
+      "exposureItem": "22195430.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "CUP, PACKING, 6\" DIA, GE-6 TB, TREAD BRA",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 2770,
+      "usage": -300,
+      "leadTime": 42.5,
+      "ratio": 0.108303249097473,
+      "recordCount": 1
+    },
+    {
+      "item": "22218209.NEW",
+      "exposureItem": "22218209.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "On/off Indicators",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -936,
+      "leadTime": 74,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22251494.NEW",
+      "exposureItem": "22251494.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "M/R Filter",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 1,
+      "usage": -91,
+      "leadTime": 133,
+      "ratio": 91,
+      "recordCount": 2
+    },
+    {
+      "item": "22299521.NEW",
+      "exposureItem": "22299521.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "GASKET, FLCRM PIN SIDE CVR GE-6, GO-5-1/",
+      "recStorage": "Manual Review Required",
+      "onHand": 4060,
+      "usage": -900,
+      "leadTime": 34.5,
+      "ratio": 0.221674876847291,
+      "recordCount": 1
+    },
+    {
+      "item": "22306300.NEW",
+      "exposureItem": "22306300.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "GASKET, CYLINDER, TREAD BRAKE, RA3, ML,",
+      "recStorage": "Manual Review Required",
+      "onHand": 2560,
+      "usage": -1400,
+      "leadTime": 30.5,
+      "ratio": 0.546875,
+      "recordCount": 1
+    },
+    {
+      "item": "22418412.NEW",
+      "exposureItem": "22418412.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "HOSE, 7/8\" ID, 1\" MALE PIPE EA, END, LS",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 280,
+      "usage": -707,
+      "leadTime": 33,
+      "ratio": 2.525,
+      "recordCount": 1
+    },
+    {
+      "item": "22456613.NEW",
+      "exposureItem": "22456613.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "Dead Engine Cutout",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 350,
+      "usage": -350,
+      "leadTime": 132.5,
+      "ratio": 1,
+      "recordCount": 1
+    },
+    {
+      "item": "22456613.NEW",
+      "exposureItem": "22456613.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "EP Cutout",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 350,
+      "usage": -350,
+      "leadTime": 132.5,
+      "ratio": 1,
+      "recordCount": 2
+    },
+    {
+      "item": "22456778.NEW",
+      "exposureItem": "22456778.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Combination Cutout-Strainer",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -125,
+      "leadTime": 182,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22457816.NEW",
+      "exposureItem": "22457816.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "H-5 25#",
+      "recStorage": "Pallet Storage",
+      "onHand": 280,
+      "usage": -385,
+      "leadTime": 103.5,
+      "ratio": 1.375,
+      "recordCount": 1
+    },
+    {
+      "item": "22457816.NEW",
+      "exposureItem": "22457816.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "HB-5 Relay 10#",
+      "recStorage": "Pallet Storage",
+      "onHand": 280,
+      "usage": -385,
+      "leadTime": 103.5,
+      "ratio": 1.375,
+      "recordCount": 2
+    },
+    {
+      "item": "22458258.NEW",
+      "exposureItem": "22458258.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Drawers",
+      "desc": "N-3-E Magnet Valve",
+      "recStorage": "Manual Review Required",
+      "onHand": 70,
+      "usage": -190,
+      "leadTime": 174.5,
+      "ratio": 2.71428571428571,
+      "recordCount": 1
+    },
+    {
+      "item": "22458837.NEW",
+      "exposureItem": "22458837.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "J-18 Relay Valve",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 15,
+      "usage": -15,
+      "leadTime": 106.5,
+      "ratio": 1,
+      "recordCount": 1
+    },
+    {
+      "item": "22458994.NEW",
+      "exposureItem": "22458994.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "Horizontal Leveling Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 160,
+      "usage": -660,
+      "leadTime": 40,
+      "ratio": 4.125,
+      "recordCount": 2
+    },
+    {
+      "item": "22458994.NEW",
+      "exposureItem": "22458994.NEW",
+      "priority": "High Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "Horizontal Leveling",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 160,
+      "usage": -660,
+      "leadTime": 40,
+      "ratio": 4.125,
+      "recordCount": 4
+    },
+    {
+      "item": "22459059.NEW",
+      "exposureItem": "22459059.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "B-1 Quick Service Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -230,
+      "leadTime": 147,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22459059.NEW",
+      "exposureItem": "22459059.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Selector Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -230,
+      "leadTime": 147,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22459070.NEW",
+      "exposureItem": "22459070.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "VX Vent Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 483,
+      "usage": -785,
+      "leadTime": 0,
+      "ratio": 1.62525879917184,
+      "recordCount": 4
+    },
+    {
+      "item": "22459339.NEW",
+      "exposureItem": "22459339.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "NS1 Reducing Valve #90",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 124,
+      "usage": -116,
+      "leadTime": 109,
+      "ratio": 0.935483870967742,
+      "recordCount": 1
+    },
+    {
+      "item": "22459339.NEW",
+      "exposureItem": "22459339.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "NS1 Reduction 90#",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 124,
+      "usage": -116,
+      "leadTime": 109,
+      "ratio": 0.935483870967742,
+      "recordCount": 2
+    },
+    {
+      "item": "22459364.NEW",
+      "exposureItem": "22459364.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "#8 Vent Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 130,
+      "usage": -280,
+      "leadTime": 85.5,
+      "ratio": 2.15384615384615,
+      "recordCount": 2
+    },
+    {
+      "item": "22459463.NEW",
+      "exposureItem": "22459463.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "E-3 Brake Application Valves",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 7,
+      "usage": -441,
+      "leadTime": 222,
+      "ratio": 63,
+      "recordCount": 2
+    },
+    {
+      "item": "22459463.NEW",
+      "exposureItem": "22459463.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "E-3 Brake Application",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 7,
+      "usage": -441,
+      "leadTime": 222,
+      "ratio": 63,
+      "recordCount": 2
+    },
+    {
+      "item": "22459463.NEW",
+      "exposureItem": "22459463.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "E-3 Application Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 7,
+      "usage": -441,
+      "leadTime": 222,
+      "ratio": 63,
+      "recordCount": 4
+    },
+    {
+      "item": "22459478.NEW",
+      "exposureItem": "22459478.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "KIT, COVER NUT, TREAD BRAKE UNIT, INCLUD",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 1400,
+      "usage": -1500,
+      "leadTime": 191.5,
+      "ratio": 1.07142857142857,
+      "recordCount": 1
+    },
+    {
+      "item": "22459495.NEW",
+      "exposureItem": "22459495.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Drawers",
+      "desc": "P2A Brake Application",
+      "recStorage": "Manual Review Required",
+      "onHand": 35,
+      "usage": -85,
+      "leadTime": 187.5,
+      "ratio": 2.42857142857143,
+      "recordCount": 2
+    },
+    {
+      "item": "22459702.NEW",
+      "exposureItem": "22459702.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "MC-31 Control Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 26,
+      "usage": -99,
+      "leadTime": 221,
+      "ratio": 3.80769230769231,
+      "recordCount": 1
+    },
+    {
+      "item": "22459702.NEW",
+      "exposureItem": "22459702.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "MC-30-A Control Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 26,
+      "usage": -99,
+      "leadTime": 221,
+      "ratio": 3.80769230769231,
+      "recordCount": 2
+    },
+    {
+      "item": "22459735.NEW",
+      "exposureItem": "22459735.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Actuators HB",
+      "recStorage": "Pallet Storage",
+      "onHand": 175,
+      "usage": -1260,
+      "leadTime": 150,
+      "ratio": 7.2,
+      "recordCount": 2
+    },
+    {
+      "item": "22459781.NEW",
+      "exposureItem": "22459781.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Reservoir Release",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -95,
+      "leadTime": 81,
+      "ratio": null,
+      "recordCount": 1
+    },
+    {
+      "item": "22459781.NEW",
+      "exposureItem": "22459781.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Reservoir Release Valve",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 0,
+      "usage": -95,
+      "leadTime": 81,
+      "ratio": null,
+      "recordCount": 2
+    },
+    {
+      "item": "22459825.NEW",
+      "exposureItem": "22459825.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Variable Load",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 70,
+      "usage": -185,
+      "leadTime": 214.5,
+      "ratio": 2.64285714285714,
+      "recordCount": 1
+    },
+    {
+      "item": "22505794.NEW",
+      "exposureItem": "22505794.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "NUT, STOP, 3/4\", TREAD BRAKE, CO2, ML, G",
+      "recStorage": "Pallet Storage",
+      "onHand": 8120,
+      "usage": -11320,
+      "leadTime": 36,
+      "ratio": 1.39408866995074,
+      "recordCount": 1
+    },
+    {
+      "item": "22525751.NEW",
+      "exposureItem": "22525751.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "PIN, FULCRUM, GO-5 1/2, GE-6\u00a0\u00a0\u00a0 COMET TB",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 84,
+      "usage": -10,
+      "leadTime": 0,
+      "ratio": 0.119047619047619,
+      "recordCount": 1
+    },
+    {
+      "item": "22611300.NEW",
+      "exposureItem": "22611300.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "26-C Service Portion (529)",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 72,
+      "usage": -178,
+      "leadTime": 190,
+      "ratio": 2.47222222222222,
+      "recordCount": 1
+    },
+    {
+      "item": "22642506.NEW",
+      "exposureItem": "22642506.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "RING, RETAINER, IMPROVED STYLE, TRD BRK",
+      "recStorage": "Manual Review Required",
+      "onHand": 20650,
+      "usage": -1650,
+      "leadTime": 43.5,
+      "ratio": 0.0799031476997579,
+      "recordCount": 1
+    },
+    {
+      "item": "22811150.NEW",
+      "exposureItem": "22811150.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "SPRING, RETURN, TREAD BRAKE, CYLINDER A=",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 3806,
+      "usage": -295,
+      "leadTime": 37.5,
+      "ratio": 0.0775091960063058,
+      "recordCount": 1
+    },
+    {
+      "item": "22812109.NEW",
+      "exposureItem": "22812109.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "SPRING, RETURN, IMPROVED STYLE, TB GE-6",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 4150,
+      "usage": -5,
+      "leadTime": 80.5,
+      "ratio": 0.00120481927710843,
+      "recordCount": 1
+    },
+    {
+      "item": "22990003.NEW",
+      "exposureItem": "22990003.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "HOSE ASSY, 1/2\", 26.318\"\u00a0 ML 1/2\" HOSE X",
+      "recStorage": "Pallet Storage",
+      "onHand": 758,
+      "usage": -1544,
+      "leadTime": 41,
+      "ratio": 2.03693931398417,
+      "recordCount": 1
+    },
+    {
+      "item": "22990018.NEW",
+      "exposureItem": "22990018.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "SENSOR, SPEED, WHEEL, W/CABLE 138\" ML",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 1,
+      "usage": -2,
+      "leadTime": 0,
+      "ratio": 2,
+      "recordCount": 1
+    },
+    {
+      "item": "22990101.NEW",
+      "exposureItem": "22990101.NEW",
+      "priority": "High Priority",
+      "poRisk": "High PO Risk",
+      "storage": "Pallets",
+      "desc": "Compensating Valve B12442/001",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 35,
+      "usage": -450,
+      "leadTime": 63,
+      "ratio": 12.8571428571429,
+      "recordCount": 1
+    },
+    {
+      "item": "24387201.NEW",
+      "exposureItem": "24387201.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "HOLDER, TABLET, CHLORIDE, ADJUSTABLE, SS",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 82,
+      "usage": -70,
+      "leadTime": 47.5,
+      "ratio": 0.853658536585366,
+      "recordCount": 1
+    },
+    {
+      "item": "29132262.NEW",
+      "exposureItem": "29132262.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Other / Unmapped",
+      "desc": "AXLE, 6\" X 11\", BRAKE SEAT, OS, BRAKE SE",
+      "recStorage": "Manual Review Required",
+      "onHand": 40,
+      "usage": -100,
+      "leadTime": 148,
+      "ratio": 2.5,
+      "recordCount": 1
+    },
+    {
+      "item": "30280000.NEW",
+      "exposureItem": "30280000.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DOWEL, WOOD, TAPRD, 1-1/2\"X 3/4\"X 3-3/4\"",
+      "recStorage": "Pallet Storage",
+      "onHand": 555,
+      "usage": -732,
+      "leadTime": 52,
+      "ratio": 1.31891891891892,
+      "recordCount": 1
+    },
+    {
+      "item": "37203403.NEW",
+      "exposureItem": "37203403.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "GREASE, MULTI PURPOSE, LITHIUM BASE,SOAP",
+      "recStorage": "Pallet Storage",
+      "onHand": 1238,
+      "usage": -1103,
+      "leadTime": 5,
+      "ratio": 0.890953150242326,
+      "recordCount": 1
+    },
+    {
+      "item": "37362525.NEW",
+      "exposureItem": "37362525.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Chemical / Hazardous Storage",
+      "desc": "LUBRICANT, SKF LGLT 2, ML",
+      "recStorage": "Manual Review Required",
+      "onHand": 60,
+      "usage": -24,
+      "leadTime": 48.5,
+      "ratio": 0.4,
+      "recordCount": 1
+    },
+    {
+      "item": "37395505.NEW",
+      "exposureItem": "37395505.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Chemical / Hazardous Storage",
+      "desc": "LUBRICANT, SILICONE SPRAY, 11 0Z AEROSOL",
+      "recStorage": "Manual Review Required",
+      "onHand": 486,
+      "usage": -1059,
+      "leadTime": 9.5,
+      "ratio": 2.17901234567901,
+      "recordCount": 1
+    },
+    {
+      "item": "45294145.NEW",
+      "exposureItem": "45294145.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "GAUGE, COUPLER & BUFFER HEIGHTS, LOCO AN",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 27,
+      "usage": -3,
+      "leadTime": 6,
+      "ratio": 0.111111111111111,
+      "recordCount": 1
+    },
+    {
+      "item": "45724091.NEW",
+      "exposureItem": "45724091.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "TONGS, LOCKING, 16\", STAINLESS, HD FOR S",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 156,
+      "usage": -60,
+      "leadTime": 16.5,
+      "ratio": 0.384615384615385,
+      "recordCount": 1
+    },
+    {
+      "item": "47000789.NEW",
+      "exposureItem": "47000789.NEW",
+      "priority": "High Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DECAL, DOOR HANDLE LOCATOR HPPL 7 X 4-1/",
+      "recStorage": "Accessible Pallet Storage",
+      "onHand": 28,
+      "usage": -41,
+      "leadTime": 17.5,
+      "ratio": 1.46428571428571,
+      "recordCount": 1
+    },
+    {
+      "item": "47037817.NEW",
+      "exposureItem": "47037817.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "THREADLOCKER, HIGH-STRNTH, #271, 10ML/BT",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 301,
+      "usage": -165,
+      "leadTime": 30,
+      "ratio": 0.548172757475083,
+      "recordCount": 1
+    },
+    {
+      "item": "47037991.NEW",
+      "exposureItem": "47037991.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "SPRAY, ADHESIVE, REMOVER, 14OZ 12BTL/CS,",
+      "recStorage": "Pallet Storage",
+      "onHand": 466,
+      "usage": -177,
+      "leadTime": 19.5,
+      "ratio": 0.379828326180258,
+      "recordCount": 1
+    },
+    {
+      "item": "47130906.NEW",
+      "exposureItem": "47130906.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Ridge Crossing / Overflow",
+      "desc": "TABLET, CHLORINE, \"X\" SLUG, MICROPHORE U",
+      "recStorage": "Overflow / Secondary Storage Review",
+      "onHand": 271,
+      "usage": -134,
+      "leadTime": 89.5,
+      "ratio": 0.494464944649447,
+      "recordCount": 1
+    },
+    {
+      "item": "47237019.NEW",
+      "exposureItem": "47237019.NEW",
+      "priority": "Low Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DECAL, TAPE, REFLECTIVE, RED/CLEAR, ROOF",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 63,
+      "usage": -6,
+      "leadTime": 14,
+      "ratio": 0.0952380952380952,
+      "recordCount": 1
+    },
+    {
+      "item": "47237130.NEW",
+      "exposureItem": "47237130.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Drawers",
+      "desc": "DECAL, EMERGENCY TOOLS, 7\" X 3.5\" ML UV",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 175,
+      "usage": -40,
+      "leadTime": 38.5,
+      "ratio": 0.228571428571429,
+      "recordCount": 1
+    },
+    {
+      "item": "47728761.NEW",
+      "exposureItem": "47728761.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Chemical / Hazardous Storage",
+      "desc": "SEALER, EDGE, DECAL SCOTCHCAL BRAND 3M P",
+      "recStorage": "Manual Review Required",
+      "onHand": 60,
+      "usage": -66,
+      "leadTime": 51,
+      "ratio": 1.1,
+      "recordCount": 1
+    },
+    {
+      "item": "47952411.NEW",
+      "exposureItem": "47952411.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Low PO Risk",
+      "storage": "Pallets",
+      "desc": "DECAL, PASSENGER EMERGENCY INTERCOM, LUM",
+      "recStorage": "Pallet Storage",
+      "onHand": 316,
+      "usage": -61,
+      "leadTime": 31.5,
+      "ratio": 0.193037974683544,
+      "recordCount": 1
+    },
+    {
+      "item": "49373721.NEW",
+      "exposureItem": "49373721.NEW",
+      "priority": "Medium Priority",
+      "poRisk": "Medium PO Risk",
+      "storage": "Pallets",
+      "desc": "HYDROMETER, BATTERY COMPLETE, TYPE V-2-F",
+      "recStorage": "Secondary Storage / Obsolete Review",
+      "onHand": 39,
+      "usage": -12,
+      "leadTime": 11.5,
+      "ratio": 0.307692307692308,
+      "recordCount": 1
+    }
+  ],
+  "exposure": [
+    {
+      "item": "29990000.NEW",
+      "value": 394382625
+    },
+    {
+      "item": "25990239.NEW",
+      "value": 360985000
+    },
+    {
+      "item": "29340815.NEW",
+      "value": 278517506.4
+    },
+    {
+      "item": "29045000.NEW",
+      "value": 227319500
+    },
+    {
+      "item": "20990070.NEW",
+      "value": 143327646
+    },
+    {
+      "item": "25794830.NEW",
+      "value": 80761185.7
+    },
+    {
+      "item": "25794833.NEW",
+      "value": 78735403.45
+    },
+    {
+      "item": "20608890.NEW",
+      "value": 77386995
+    },
+    {
+      "item": "29990001.NEW",
+      "value": 69283371.3
+    },
+    {
+      "item": "22459463.NEW",
+      "value": 39604800
+    },
+    {
+      "item": "22459702.NEW",
+      "value": 27827436
+    },
+    {
+      "item": "22458294.NEW",
+      "value": 27734375
+    },
+    {
+      "item": "20990017.NEW",
+      "value": 27587940
+    },
+    {
+      "item": "22459735.NEW",
+      "value": 22018500
+    },
+    {
+      "item": "22521056.NEW",
+      "value": 17324741.5
+    },
+    {
+      "item": "11990014.NEW",
+      "value": 16939952.64
+    },
+    {
+      "item": "22458010.NEW",
+      "value": 16191288
+    },
+    {
+      "item": "20807202.NEW",
+      "value": 14750460
+    },
+    {
+      "item": "22459478.NEW",
+      "value": 14639523.9
+    },
+    {
+      "item": "22611300.NEW",
+      "value": 14536349
+    },
+    {
+      "item": "20990002.NEW",
+      "value": 14453802
+    },
+    {
+      "item": "29132262.NEW",
+      "value": 14449536
+    },
+    {
+      "item": "22456778.NEW",
+      "value": 14288820
+    },
+    {
+      "item": "20803130.NEW",
+      "value": 11253836.8
+    },
+    {
+      "item": "47130906.NEW",
+      "value": 10315322.5
+    },
+    {
+      "item": "22459347.NEW",
+      "value": 9512724
+    },
+    {
+      "item": "22195430.NEW",
+      "value": 9381543.5
+    },
+    {
+      "item": "22458448.NEW",
+      "value": 9132864
+    },
+    {
+      "item": "22456613.NEW",
+      "value": 6646995
+    },
+    {
+      "item": "25706033.NEW",
+      "value": 6638340.8
+    },
+    {
+      "item": "22844805.NEW",
+      "value": 5854056
+    },
+    {
+      "item": "22060911.NEW",
+      "value": 5617491.2
+    },
+    {
+      "item": "20827801.NEW",
+      "value": 5007775
+    },
+    {
+      "item": "22459059.NEW",
+      "value": 4980213
+    },
+    {
+      "item": "20040968.NEW",
+      "value": 4679034.525
+    },
+    {
+      "item": "12137020.NEW",
+      "value": 4410782.75
+    },
+    {
+      "item": "22000078.NEW",
+      "value": 4054360.8
+    },
+    {
+      "item": "20160250.NEW",
+      "value": 3994893.6
+    },
+    {
+      "item": "22458903.NEW",
+      "value": 3688272
+    },
+    {
+      "item": "22457816.NEW",
+      "value": 3651480
+    },
+    {
+      "item": "22459825.NEW",
+      "value": 3494205
+    },
+    {
+      "item": "22811150.NEW",
+      "value": 3288120
+    },
+    {
+      "item": "22028904.NEW",
+      "value": 3147657.1
+    },
+    {
+      "item": "20460015.NEW",
+      "value": 2975000
+    },
+    {
+      "item": "22458994.NEW",
+      "value": 2526720
+    },
+    {
+      "item": "22990003.NEW",
+      "value": 2416758.12
+    },
+    {
+      "item": "22459495.NEW",
+      "value": 2328750
+    },
+    {
+      "item": "20803113.NEW",
+      "value": 1966491.45
+    },
+    {
+      "item": "22459364.NEW",
+      "value": 1948716
+    },
+    {
+      "item": "22812109.NEW",
+      "value": 1921064.88
+    },
+    {
+      "item": "22458258.NEW",
+      "value": 1844866.35
+    },
+    {
+      "item": "20741305.NEW",
+      "value": 1770408.9
+    },
+    {
+      "item": "22459339.NEW",
+      "value": 1674240
+    },
+    {
+      "item": "22460321.NEW",
+      "value": 1601250
+    },
+    {
+      "item": "22251494.NEW",
+      "value": 1598493.75
+    },
+    {
+      "item": "22459781.NEW",
+      "value": 1249627.5
+    },
+    {
+      "item": "45293501.NEW",
+      "value": 1006470
+    },
+    {
+      "item": "24387201.NEW",
+      "value": 911472.75
+    },
+    {
+      "item": "20041164.NEW",
+      "value": 880229.025
+    },
+    {
+      "item": "22990101.NEW",
+      "value": 838152
+    },
+    {
+      "item": "22642506.NEW",
+      "value": 738108
+    },
+    {
+      "item": "22218209.NEW",
+      "value": 685980
+    },
+    {
+      "item": "22418412.NEW",
+      "value": 408210
+    },
+    {
+      "item": "22458837.NEW",
+      "value": 358958.25
+    },
+    {
+      "item": "22460148.NEW",
+      "value": 309252.75
+    },
+    {
+      "item": "20238759.NEW",
+      "value": 307125
+    },
+    {
+      "item": "20620825.NEW",
+      "value": 266939.2
+    },
+    {
+      "item": "22306300.NEW",
+      "value": 178586.345
+    },
+    {
+      "item": "47037991.NEW",
+      "value": 126781.2
+    },
+    {
+      "item": "22299521.NEW",
+      "value": 123744.6
+    },
+    {
+      "item": "47237019.NEW",
+      "value": 123574.08
+    },
+    {
+      "item": "37362525.NEW",
+      "value": 114266
+    },
+    {
+      "item": "47037817.NEW",
+      "value": 89025
+    },
+    {
+      "item": "47728761.NEW",
+      "value": 69156
+    },
+    {
+      "item": "45724091.NEW",
+      "value": 59756.4
+    },
+    {
+      "item": "30280000.NEW",
+      "value": 56160
+    },
+    {
+      "item": "19076553.NEW",
+      "value": 52644.02
+    },
+    {
+      "item": "37395505.NEW",
+      "value": 36443.52
+    },
+    {
+      "item": "22505794.NEW",
+      "value": 34444.8
+    },
+    {
+      "item": "47237130.NEW",
+      "value": 32266.08
+    },
+    {
+      "item": "37203403.NEW",
+      "value": 26200
+    },
+    {
+      "item": "20160251.NEW",
+      "value": 26069.04
+    },
+    {
+      "item": "47952411.NEW",
+      "value": 24232.32
+    },
+    {
+      "item": "47000789.NEW",
+      "value": 12110
+    },
+    {
+      "item": "49373721.NEW",
+      "value": 10091.25
+    },
+    {
+      "item": "45294145.NEW",
+      "value": 6120
+    },
+    {
+      "item": "37725809.NEW",
+      "value": 4704
+    },
+    {
+      "item": "22061301.NEW",
+      "value": 0
+    },
+    {
+      "item": "22453241.NEW",
+      "value": 0
+    },
+    {
+      "item": "22459070.NEW",
+      "value": 0
+    },
+    {
+      "item": "22525751.NEW",
+      "value": 0
+    },
+    {
+      "item": "22990018.NEW",
+      "value": 0
+    }
+  ]
 }
