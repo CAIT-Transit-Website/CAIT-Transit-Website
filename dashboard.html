@@ -1207,8 +1207,7 @@
                     <div class="term-grid">
                         <div class="term-item" onclick="jumpToViz('viz-movement')" role="button" tabindex="0">
                             <div class="term-title">Movement rate</div>
-                            <p class="term-desc">The share of inventory classified as Active vs. Slow Moving, based on
-                                recent usage history.</p>
+                            <p class="term-desc">Power BI classifies inventory as Active (up to 180 days since usage), Slow Moving (over 180 through 730 days), or Obsolete (over 730 days). The obsolete segment appears only when its count is positive. Percentages use the sum of category-level distinct counts; an item classified in multiple categories contributes to each.</p>
                         </div>
                         <div class="term-item" onclick="jumpToViz('viz-priority-risk')" role="button" tabindex="0">
                             <div class="term-title">Slotting priority</div>
@@ -1229,9 +1228,7 @@
                         </div>
                         <div class="term-item" onclick="jumpToViz('viz-exposure')" role="button" tabindex="0">
                             <div class="term-title">Procurement exposure</div>
-                            <p class="term-desc">The dollar value of open purchase commitments tied to an item — a proxy
-                                for
-                                financial risk concentration.</p>
+                            <p class="term-desc">Price × procurement lead time × purchase order quantity, summed by item. This lead-time-weighted exposure score is not a dollar value. Larger scores indicate greater combined price, quantity, and replenishment-time exposure.</p>
                         </div>
                     </div>
                 </div>
@@ -1253,7 +1250,7 @@
                         </li>
                         <li><span class="howto-num">6</span><span>Use the dropdowns on the item list for a second layer of filtering by priority, storage type, or PO risk level. The colored strip on each card reflects PO risk (red/yellow/green).</span>
                         </li>
-                        <li><span class="howto-num">7</span><span>Click a bar on the exposure leaderboard to filter every visual above down to just that item; click it again (or clear the search box) to reset.</span>
+                        <li><span class="howto-num">7</span><span>Click a bar on the exposure leaderboard to filter the breakdown, storage bars, and item cards to that item; click it again (or clear the search box) to reset.</span>
                         </li>
                     </ol>
                 </div>
@@ -1262,14 +1259,14 @@
             <!-- ================= DARK ANALYTICS SECTION ================= -->
             <div class="dark-fullbleed">
                 <div class="dark-section">
-                    <p class="eyebrow">Current Inventory Status</p>
+                    <p class="eyebrow">Current Inventory Status</p><p id="inventory-sync-status" role="status" style="color:#bbb;font-size:12px">Loading current analytics; existing figures are a saved snapshot.</p>
 
                     <div class="dark-kpi-row">
                         <div class="dark-kpi"><p class="val" id="total-po-qty">138K</p>
                             <p class="lbl">Total PO qty</p></div>
-                        <div class="dark-kpi"><p class="val">121.3K</p>
+                        <div class="dark-kpi"><p class="val" id="total-on-hand">121.3K</p>
                             <p class="lbl">Total on hand</p></div>
-                        <div class="dark-kpi"><p class="val" style="color:#fff">$27.1M</p>
+                        <div class="dark-kpi"><p class="val" id="total-inventory-value" style="color:#fff">$27.1M</p>
                             <p class="lbl">Total inventory value</p></div>
                     </div>
 
@@ -1308,7 +1305,7 @@
                         <!-- 2. Priority x PO Risk heatmap -->
                         <div class="dcard full" id="viz-priority-risk">
                             <p class="dcard-title">Priority × PO risk breakdown</p>
-                            <p class="dcard-cap">Item counts by slotting priority and purchase-order risk level —
+                            <p class="dcard-cap">Nonblank item-record counts by slotting priority and purchase-order risk level —
                                 red for high risk, yellow for medium, green for low. Shows overall totals until you
                                 search above, then reflects just the matching items.</p>
                             <div id="heatmapWrap"></div>
@@ -1317,7 +1314,7 @@
                         <!-- 3. Storage by priority toggle -->
                         <div class="dcard" id="viz-storage">
                             <p class="dcard-title">Storage type by priority</p>
-                            <p class="dcard-cap">Where each priority tier's inventory physically lives.</p>
+                            <p class="dcard-cap">Item-record counts by storage type for the selected priority tier. These are counts, not physical storage volume.</p>
                             <div class="toggle-row" id="toggleRow">
                                 <div class="toggle-btn active" data-p="High Priority">High Priority</div>
                                 <div class="toggle-btn" data-p="Medium Priority">Medium Priority</div>
@@ -1374,7 +1371,7 @@
                         <!-- 6. Procurement exposure -->
                         <div class="dcard full" id="viz-exposure">
                             <p class="dcard-title">Procurement exposure — all items</p>
-                            <p class="dcard-cap">All 92 tracked items ranked by open purchase-value exposure, scroll for
+                            <p class="dcard-cap">Tracked items ranked by lead-time-weighted procurement exposure, scroll for
                                 the full list. Click a bar
                                 to filter the visuals above to that item; click it again to clear.</p>
                             <div id="lbList"></div>
@@ -3781,7 +3778,7 @@
     // ===== Real exported data =====
     const movement = {active: 59, slow: 46};
     const serviceAvailability = {risk: 93, covered: 13};
-    const exposureTop = [{item: "29990000.NEW", value: 394382625.0}, {
+    let exposureTop = [{item: "29990000.NEW", value: 394382625.0}, {
         item: "25990239.NEW",
         value: 360985000.0
     }, {item: "29340815.NEW", value: 278517506.40000004}, {
@@ -3887,7 +3884,7 @@
         item: "22525751.NEW",
         value: 0.0
     }, {item: "22990018.NEW", value: 0.0}];
-    const items = [{
+    let items = [{
         "item": "20041164.NEW",
         "priority": "High Priority",
         "onHand": 421,
@@ -7474,7 +7471,7 @@
       <span class="lb-rank" style="background:${color}">${idx + 1}</span>
       <span class="lb-code">${row.item}</span>
       <div class="lb-track"><div class="lb-fill" style="width:${(row.value / max) * 100}%;background:${color}"></div></div>
-      <span class="lb-val">$${(row.value / 1e6).toFixed(1)}M</span>
+      <span class="lb-val">${(row.value / 1e6).toFixed(1)}M</span>
     </div>
   `;
         }).join('');
@@ -7534,45 +7531,7 @@
     renderAll();
 
 </script>
-<script>
-async function updateTotalPoQty() {
-    const card = document.getElementById("total-po-qty");
-    if (!card) return;
-
-    try {
-        const response = await fetch("./data/analytics.json", {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error(`Analytics request failed: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const quantity = data.totalPoQty;
-
-        if (
-            typeof quantity !== "number" ||
-            !Number.isFinite(quantity) ||
-            quantity < 0
-        ) {
-            throw new Error("Invalid Total PO quantity");
-        }
-
-        card.textContent = new Intl.NumberFormat("en-US", {
-            notation: "compact",
-            maximumFractionDigits: 0
-        }).format(quantity);
-
-        card.title = `Total PO quantity: ${quantity.toLocaleString("en-US")}`;
-    } catch (error) {
-        console.error("Unable to update Total PO quantity:", error);
-        card.title = "Live update unavailable; showing the last displayed value.";
-    }
-}
-
-updateTotalPoQty();
-</script>
+<script src="./assets/current-inventory.js"></script>
 
 </body>
 </html>
