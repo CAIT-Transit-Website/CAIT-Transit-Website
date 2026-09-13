@@ -1,0 +1,102 @@
+name: PiMS Min-Max Sync
+
+on:
+  repository_dispatch:
+    types: [pims-minmax-sync]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pims-minmax-sync
+  cancel-in-progress: false
+
+jobs:
+  update-minmax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Validate and save Min-Max data
+        shell: python
+        run: |
+          import json
+          import os
+          from datetime import datetime
+          from pathlib import Path
+
+          event = json.loads(
+              Path(os.environ["GITHUB_EVENT_PATH"]).read_text()
+          )
+
+          payload = event.get("client_payload")
+
+          if not isinstance(payload, dict):
+              raise ValueError("Expected a JSON object as the event payload.")
+
+          required = [
+              "schemaVersion",
+              "exportedAtUtc",
+              "kpis",
+              "policyComparison",
+              "stockoutRisk",
+              "valueReduction",
+              "recommendations",
+          ]
+
+          missing = [key for key in required if key not in payload]
+
+          if missing:
+              raise ValueError(
+                  f"Missing required fields: {', '.join(missing)}"
+              )
+
+          exported_at = payload["exportedAtUtc"]
+
+          if not isinstance(exported_at, str):
+              raise ValueError("exportedAtUtc must be a timestamp.")
+
+          timestamp = datetime.fromisoformat(
+              exported_at.replace("Z", "+00:00")
+          )
+
+          if timestamp.tzinfo is None:
+              raise ValueError("The timestamp must include a time zone.")
+
+          output = Path("data/minmax.json")
+          output.parent.mkdir(parents=True, exist_ok=True)
+
+          if output.exists():
+              previous = json.loads(output.read_text())
+              previous_time = datetime.fromisoformat(
+                  previous["exportedAtUtc"].replace("Z", "+00:00")
+              )
+
+              if timestamp <= previous_time:
+                  print("Skipping an older or duplicate export.")
+                  raise SystemExit(0)
+
+          output.write_text(
+              json.dumps(payload, indent=2, allow_nan=False) + "\n"
+          )
+
+      - name: Commit updated Min-Max data
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -- data/minmax.json
+
+          if git diff --cached --quiet; then
+            echo "No data changes to save."
+            exit 0
+          fi
+
+          git commit -m "Update Min-Max dashboard data"
+          git push origin HEAD:main
