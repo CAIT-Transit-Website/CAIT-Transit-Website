@@ -1,0 +1,125 @@
+name: PiMS Min-Max Chunk Sync
+
+on:
+  repository_dispatch:
+    types: [pims-minmax-chunk]
+  # A manual run checks installation only; it does not publish sample data.
+  workflow_dispatch:
+  # Clear only this transport's managed staging branches after seven days.
+  schedule:
+    - cron: '37 4 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  check-setup:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Check transfer software without publishing
+        run: node .github/scripts/minmax_transfer.cjs self-test
+
+  receive:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    concurrency:
+      group: pims-minmax-receive-${{ github.event.client_payload.transferId }}
+      cancel-in-progress: false
+      queue: max
+    outputs:
+      ready: ${{ steps.part.outputs.ready }}
+      source_sha: ${{ steps.part.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Receive a numbered part
+        id: part
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/minmax_transfer.cjs receive
+
+  commit-data:
+    name: Assemble, validate, and save complete data
+    needs: receive
+    if: needs.receive.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    # Same group as the supplied Current Inventory workflow; prevents concurrent main writes.
+    concurrency:
+      group: pims-analytics-sync
+      cancel-in-progress: false
+      queue: max
+    outputs:
+      applied: ${{ steps.commit.outputs.applied }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Reconstruct and validate the full export
+        id: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MINMAX_SOURCE_SHA: ${{ needs.receive.outputs.source_sha }}
+        run: node .github/scripts/minmax_transfer.cjs finalize
+
+  publish:
+    name: Publish website
+    needs: commit-data
+    if: needs.commit-data.outputs.applied == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+      queue: max
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Checkout happens after acquiring the Pages queue, so a queued job uses latest main.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Set up GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy complete website
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  cleanup:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Clear expired managed transfer branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/minmax_transfer.cjs cleanup
