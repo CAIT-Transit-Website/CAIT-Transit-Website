@@ -1,362 +1,480 @@
-/* Live Min-Max export loader */
-(() => {
+(function minmaxLive() {
     'use strict';
 
     const leads = ['Normal Lead Time', '15% Delay', '30% Delay'];
     const demands = ['Stable', 'Moderate', 'Spiky'];
     const policies = ['Lean', 'Balanced', 'High Service'];
-    const num = v => typeof v === 'number' && Number.isFinite(v) ? v : null;
-    const key = (l, d, p) => l + '|' + d + '|' + p;
+
+    const key = (l, d, p) => JSON.stringify([l, d, p]);
+
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c =>
+        ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[c])
+    );
+
+    const fmt = value =>
+        value === null ? '—' : value.toLocaleString('en-US');
+
+    function number(row, name, optional = false) {
+        const value = row['[' + name + ']'];
+
+        if (value == null && optional) return null;
+
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
+            throw new Error('Invalid or missing ' + name);
+        }
+
+        return value;
+    }
+
+    function scenario(row) {
+        const l = row['[leadTime]'];
+        const d = row['[demand]'];
+        const p = row['[policy]'];
+
+        if (
+            !leads.includes(l) ||
+            !demands.includes(d) ||
+            !policies.includes(p)
+        ) {
+            throw new Error('Unrecognized Min-Max scenario.');
+        }
+
+        return key(l, d, p);
+    }
 
     function replaceObject(target, source) {
         Object.keys(target).forEach(k => delete target[k]);
         Object.assign(target, source);
     }
 
-    function money(v) {
-        const n = Math.abs(v);
-        const sign = v < 0 ? '-' : '';
-        if (n >= 1e6) return sign + '$' + (n / 1e6).toFixed(2) + 'M';
-        if (n >= 1e3) return sign + '$' + (n / 1e3).toFixed(0) + 'K';
+    function money(value) {
+        const n = Math.abs(value);
+        const sign = value < 0 ? '-' : '';
+
+        if (n >= 1e6) {
+            return sign + '$' + (n / 1e6).toFixed(2) + 'M';
+        }
+
+        if (n >= 1e3) {
+            return sign + '$' + (n / 1e3).toFixed(0) + 'K';
+        }
+
         return sign + '$' + n.toFixed(0);
     }
 
     function statusElement() {
         let el = document.getElementById('minmax-sync-status');
-        if (el) return el;
 
-        const row = document.getElementById('viz-mm-kpis');
-        if (!row || !row.parentElement) return null;
+        if (!el) {
+            el = document.createElement('p');
+            el.id = 'minmax-sync-status';
+            el.setAttribute('role', 'status');
+            el.style.cssText =
+                'margin:-8px 0 14px;color:#b8b8b8;font-size:12px';
 
-        el = document.createElement('p');
-        el.id = 'minmax-sync-status';
-        el.setAttribute('role', 'status');
-        el.style.cssText =
-            'margin:-8px 0 14px;color:#b8b8b8;font-size:12px';
+            const row = document.getElementById('viz-mm-kpis');
+            row.parentElement.insertBefore(el, row);
+        }
 
-        row.parentElement.insertBefore(el, row);
         return el;
     }
 
-    function stockoutRenderer() {
-        renderStockoutDist = function () {
-            const dist =
-                STOCKOUT_DIST[mmState.leadTime][mmState.demand][mmState.policy];
-
-            const wrap = document.getElementById('stockoutDistWrap');
-            const max = Math.max(1, ...dist.bands.map(b => b.pct));
-
-            wrap.innerHTML = dist.bands.map((b, i) =>
-                '<div class="storage-bar-row">' +
-                '<span class="label" style="width:120px">' + b.label + '</span>' +
-                '<div class="storage-bar-track"><div class="storage-bar-fill" style="width:' +
-                (b.pct / max * 100) +
-                '%;background:' + BAND_COLORS[i] + '"></div></div>' +
-                '<span class="n" style="width:64px">' + b.pct + '%</span>' +
-                '</div>'
-            ).join('');
-
-            document.getElementById('stockoutDistCaveat').textContent =
-                'Based on ' + dist.total.toLocaleString() +
-                ' evaluated items in the selected scenario. Percentages come from the published Min-Max export.';
-        };
-    }
-
-    function apply(data) {
-        if (
-            data.schemaVersion !== 1 ||
-            !data.kpis ||
-            !Array.isArray(data.policyComparison) ||
-            !Array.isArray(data.stockoutRisk) ||
-            !Array.isArray(data.valueReduction) ||
-            !Array.isArray(data.recommendations)
-        ) {
-            throw new Error('The Min-Max export is incomplete or has the wrong schema.');
+    function prepare(data) {
+        if (data.schemaVersion !== 1 || !data.kpis) {
+            throw new Error('Unexpected Min-Max export format.');
         }
 
-        const k = data.kpis;
-        const current = {};
-        const selected = {};
+        for (const name of [
+            'policyComparison',
+            'stockoutRisk',
+            'valueReduction',
+            'recommendations'
+        ]) {
+            if (!Array.isArray(data[name])) {
+                throw new Error('Missing ' + name);
+            }
+        }
 
-        data.policyComparison.forEach(r => {
-            const l = r['[leadTime]'];
-            const d = r['[demand]'];
-            const p = r['[policy]'];
+        const exported = new Date(data.exportedAtUtc);
 
-            const value = num(r['[inventoryValue]']);
-            const fill = num(r['[fillRate]']);
+        if (!Number.isFinite(exported.getTime())) {
+            throw new Error('Invalid export time.');
+        }
 
-            if (
-                !leads.includes(l) ||
-                !demands.includes(d) ||
-                !policies.includes(p) ||
-                value === null ||
-                fill === null
-            ) return;
+        const kpis = [
+            'Parts_Evaluated',
+            'NIVR',
+            'Validated_Recommendations',
+            'Replenishment_Workload_Multiple'
+        ].map(name => number(data.kpis, name));
 
-            if (r['[comparison]'] === 'Current Policy') {
-                if (!current[l + '|' + d]) {
-                    current[l + '|' + d] = {
-                        value,
-                        fillRate: fill
-                    };
-                }
+        const comparisons = new Map();
+        const riskGroups = new Map();
+        const recGroups = new Map();
+
+        for (const row of data.policyComparison) {
+            const id = scenario(row);
+            const comparison = row['[comparison]'];
+
+            if (!['Current Policy', 'Selected Policy'].includes(comparison)) {
+                throw new Error('Unrecognized policy comparison.');
             }
 
-            if (r['[comparison]'] === 'Selected Policy') {
-                selected[key(l, d, p)] = {
-                    value,
-                    fillRate: fill
-                };
+            if (!comparisons.has(id)) {
+                comparisons.set(id, {});
             }
-        });
+
+            const pair = comparisons.get(id);
+
+            if (pair[comparison]) {
+                throw new Error('Duplicate policy comparison.');
+            }
+
+            const value = number(row, 'inventoryValue');
+            const fillRate = number(row, 'fillRate');
+
+            if (fillRate < 0 || fillRate > 1) {
+                throw new Error('Invalid fill rate.');
+            }
+
+            pair[comparison] = {value, fillRate};
+        }
+
+        for (const row of data.stockoutRisk) {
+            const id = scenario(row);
+
+            if (!riskGroups.has(id)) {
+                riskGroups.set(id, []);
+            }
+
+            riskGroups.get(id).push(row);
+        }
+
+        // Keep every exported item, including missing current thresholds.
+        for (const row of data.recommendations) {
+            const id = scenario(row);
+            const item = row['[item]'];
+
+            if (typeof item !== 'string' || !item.trim()) {
+                throw new Error('Missing item code.');
+            }
+
+            if (!recGroups.has(id)) {
+                recGroups.set(id, new Map());
+            }
+
+            const group = recGroups.get(id);
+
+            if (group.has(item)) {
+                throw new Error(
+                    'Duplicate item in one scenario: ' + item
+                );
+            }
+
+            group.set(item, {
+                item,
+                desc: String(row['[description]'] ?? ''),
+                curMin: number(row, 'currentMin', true),
+                curMax: number(row, 'currentMax', true),
+                recMin: number(row, 'recommendedMin', true),
+                recMax: number(row, 'recommendedMax', true)
+            });
+        }
 
         const cp = {};
         const sp = {};
         const repl = {};
+        const risk = {};
+        const vr = {};
+        const recommendations = new Map();
 
-        leads.forEach(l => {
+        for (const l of leads) {
             cp[l] = {};
             sp[l] = {};
             repl[l] = {};
+            risk[l] = {};
 
-            demands.forEach(d => {
-                const c = current[l + '|' + d];
-
-                if (!c) {
-                    throw new Error('Missing current policy result.');
-                }
-
-                cp[l][d] = c;
+            for (const d of demands) {
                 sp[l][d] = {};
                 repl[l][d] = {};
+                risk[l][d] = {};
 
-                policies.forEach(p => {
-                    const s = selected[key(l, d, p)];
+                for (const p of policies) {
+                    const id = key(l, d, p);
+                    const pair = comparisons.get(id);
 
-                    if (!s) {
-                        throw new Error('Missing selected policy result.');
+                    if (
+                        !pair?.['Current Policy'] ||
+                        !pair?.['Selected Policy']
+                    ) {
+                        throw new Error(
+                            'Missing policy comparison: ' + id
+                        );
                     }
 
-                    sp[l][d][p] = s;
-                    repl[l][d][p] =
-                        k['[Replenishment_Workload_Multiple]'];
-                });
-            });
-        });
+                    cp[l][d] = pair['Current Policy'];
+                    sp[l][d][p] = pair['Selected Policy'];
+                    repl[l][d][p] = kpis[3];
 
-        const vr = {};
+                    const rows = riskGroups.get(id);
 
-        policies.forEach(p => {
+                    if (!rows?.length) {
+                        throw new Error(
+                            'Missing stockout distribution: ' + id
+                        );
+                    }
+
+                    const total = number(rows[0], 'totalItems');
+                    const orders = new Set();
+
+                    const bands = rows.map(row => {
+                        const order = number(row, 'bandOrder');
+                        const n = number(row, 'itemCount', true) ?? 0;
+                        const fraction =
+                            number(row, 'percentage', true) ?? 0;
+                        const label = row['[riskBand]'];
+
+                        if (
+                            orders.has(order) ||
+                            typeof label !== 'string' ||
+                            !Number.isInteger(n) ||
+                            n < 0 ||
+                            fraction < 0 ||
+                            fraction > 1 ||
+                            number(row, 'totalItems') !== total
+                        ) {
+                            throw new Error('Invalid stockout band.');
+                        }
+
+                        orders.add(order);
+
+                        return {
+                            label,
+                            n,
+                            order,
+                            pct: Math.round(fraction * 1000) / 10
+                        };
+                    }).sort((a, b) => a.order - b.order);
+
+                    if (
+                        bands.reduce((sum, b) => sum + b.n, 0) !== total
+                    ) {
+                        throw new Error(
+                            'Stockout counts do not match the item total.'
+                        );
+                    }
+
+                    risk[l][d][p] = {total, bands};
+
+                    const group = recGroups.get(id);
+
+                    if (!group?.size) {
+                        throw new Error(
+                            'Missing recommendations: ' + id
+                        );
+                    }
+
+                    recommendations.set(
+                        id,
+                        [...group.values()].sort(
+                            (a, b) => a.item.localeCompare(b.item)
+                        )
+                    );
+                }
+            }
+        }
+
+        for (const p of policies) {
             vr[p] = data.valueReduction
-                .filter(r =>
-                    r['[policy]'] === p &&
-                    typeof r['[item]'] === 'string' &&
-                    num(r['[value]']) !== null
-                )
-                .map(r => ({
-                    item: r['[item]'],
-                    value: num(r['[value]'])
-                }))
+                .filter(row => row['[policy]'] === p)
+                .map(row => {
+                    if (typeof row['[item]'] !== 'string') {
+                        throw new Error('Missing leaderboard item.');
+                    }
+
+                    return {
+                        item: row['[item]'],
+                        value: number(row, 'value')
+                    };
+                })
                 .sort((a, b) => b.value - a.value)
                 .slice(0, 8);
 
             if (!vr[p].length) {
-                throw new Error('Missing value-reduction rows.');
+                throw new Error('Missing value reduction for ' + p);
             }
-        });
+        }
 
-        const riskRows = {};
+        return {
+            exported,
+            kpis,
+            comparisons,
+            cp,
+            sp,
+            repl,
+            risk,
+            vr,
+            recommendations
+        };
+    }
 
-        data.stockoutRisk.forEach(r => {
-            const l = r['[leadTime]'];
-            const d = r['[demand]'];
-            const p = r['[policy]'];
+    function installRecommendationTable(groups) {
+        const search = document.getElementById('mmRecSearch');
 
-            if (
-                !leads.includes(l) ||
-                !demands.includes(d) ||
-                !policies.includes(p)
-            ) return;
+        // Disconnect the previous search handler before replacing it.
+        search.removeEventListener(
+            'input',
+            renderMmRecommendationTable
+        );
 
-            const id = key(l, d, p);
+        renderMmRecommendationTable = function () {
+            const {leadTime, demand, policy} = mmState;
 
-            if (!riskRows[id]) {
-                riskRows[id] = [];
-            }
+            const rows =
+                groups.get(key(leadTime, demand, policy)) || [];
 
-            riskRows[id].push(r);
-        });
+            const term = search.value.trim().toLowerCase();
 
-        const risk = {};
+            const filtered = rows.filter(r =>
+                (r.item + ' ' + r.desc)
+                    .toLowerCase()
+                    .includes(term)
+            );
 
-        leads.forEach(l => {
-            risk[l] = {};
+            const wrap = document.getElementById('mmRecTableWrap');
 
-            demands.forEach(d => {
-                risk[l][d] = {};
+            wrap.innerHTML = `
+                <table class="crosstab-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">Item</th>
+                            <th style="text-align:left">Description</th>
+                            <th>Current Min</th>
+                            <th>Current Max</th>
+                            <th>Recommended Min</th>
+                            <th>Recommended Max</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filtered.map(r => `
+                            <tr
+                                class="${r.item === mmSelectedItem ? 'mm-rec-selected-row' : ''}"
+                                data-item="${esc(r.item)}"
+                            >
+                                <td style="text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px">
+                                    ${esc(r.item)}
+                                </td>
+                                <td style="text-align:left">
+                                    ${esc(r.desc)}
+                                </td>
+                                <td>${fmt(r.curMin)}</td>
+                                <td>${fmt(r.curMax)}</td>
+                                <td style="color:${r.recMin === null ? 'var(--dark-muted)' : '#27AE60'};font-weight:600">
+                                    ${fmt(r.recMin)}
+                                </td>
+                                <td style="color:${r.recMax === null ? 'var(--dark-muted)' : '#27AE60'};font-weight:600">
+                                    ${fmt(r.recMax)}
+                                </td>
+                            </tr>
+                        `).join('') ||
+                        '<tr><td colspan="6">No items match your search.</td></tr>'}
+                    </tbody>
+                </table>
+            `;
 
-                policies.forEach(p => {
-                    const rows = riskRows[key(l, d, p)];
+            document.getElementById('mmRecCount').textContent =
+                `Showing ${filtered.length} of ${rows.length} items — ${policy}, ${demand}, ${leadTime}.`;
 
-                    if (!rows || !rows.length) {
-                        throw new Error('Missing stockout-risk rows.');
-                    }
+            const selected =
+                wrap.querySelector('.mm-rec-selected-row');
 
-                    const bands = rows
-                        .slice()
-                        .sort((a, b) =>
-                            (num(a['[bandOrder]']) || 0) -
-                            (num(b['[bandOrder]']) || 0)
-                        )
-                        .map(r => ({
-                            label: String(
-                                r['[riskBand]'] ?? 'Unclassified'
-                            ),
-                            n: Math.max(
-                                0,
-                                num(r['[itemCount]']) || 0
-                            ),
-                            pct: Math.round(
-                                Math.max(
-                                    0,
-                                    num(r['[percentage]']) || 0
-                                ) * 1000
-                            ) / 10
-                        }));
-
-                    risk[l][d][p] = {
-                        total: bands.reduce(
-                            (sum, b) => sum + b.n,
-                            0
-                        ),
-                        bands
-                    };
+            if (selected) {
+                selected.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
                 });
-            });
-        });
-
-        const thresholds = {};
-        const balanced = {};
-
-        leads.forEach(l => {
-            balanced[l] = {};
-
-            demands.forEach(d => {
-                balanced[l][d] = {};
-            });
-        });
-
-        data.recommendations.forEach(r => {
-            const item = r['[item]'];
-
-            if (typeof item !== 'string') {
-                return;
             }
+        };
 
-            if (
-                !thresholds[item] &&
-                num(r['[currentMin]']) !== null &&
-                num(r['[currentMax]']) !== null
-            ) {
-                thresholds[item] = {
-                    item,
-                    desc: String(r['[description]'] ?? ''),
-                    cur_min: num(r['[currentMin]']),
-                    cur_max: num(r['[currentMax]'])
-                };
-            }
-
-            if (
-                r['[policy]'] === 'Balanced' &&
-                leads.includes(r['[leadTime]']) &&
-                demands.includes(r['[demand]']) &&
-                num(r['[recommendedMin]']) !== null &&
-                num(r['[recommendedMax]']) !== null
-            ) {
-                balanced[r['[leadTime]']][r['[demand]']][item] = {
-                    sel_min: num(r['[recommendedMin]']),
-                    sel_max: num(r['[recommendedMax]'])
-                };
-            }
-        });
-
-        replaceObject(mmReplenishment, repl);
-        replaceObject(mmCurrentPolicy, cp);
-        replaceObject(mmSelectedPolicy, sp);
-        replaceObject(mmValueReduction, vr);
-        replaceObject(STOCKOUT_DIST, risk);
-
-        mmCurrentThresholds.splice(
-            0,
-            mmCurrentThresholds.length,
-            ...Object.values(thresholds).sort(
-                (a, b) => a.item.localeCompare(b.item)
-            )
+        search.addEventListener(
+            'input',
+            renderMmRecommendationTable
         );
 
-        replaceObject(
-            mmSelectedThresholdsBalanced,
-            balanced
+        const caption = document.querySelector(
+            '#viz-mm-recommendation .dcard-cap'
         );
 
-        const values = [
-            k['[Parts_Evaluated]'].toLocaleString('en-US'),
-            money(k['[NIVR]']),
-            k['[Validated_Recommendations]']
-                .toLocaleString('en-US'),
-            k['[Replenishment_Workload_Multiple]']
-                .toFixed(2) + 'x'
-        ];
+        if (caption) {
+            caption.textContent =
+                'Current min/max per item and recommended min/max for the selected lead time, demand profile, and policy. A dash means no value was provided.';
+        }
 
-        const titles = [
-            'Parts evaluated: ' + values[0],
-            'NIVR: ' + values[1],
-            'Validated recommendations: ' + values[2],
-            'Replenishment workload multiple: ' + values[3]
-        ];
+        const definition = document.querySelector(
+            '#tabMinMax .term-item[onclick*="viz-mm-recommendation"] .term-desc'
+        );
 
-        document
-            .querySelectorAll('#viz-mm-kpis .dark-kpi')
-            .forEach((card, i) => {
-                const value = card.querySelector('.val');
-
-                if (value && values[i] !== undefined) {
-                    value.textContent = values[i];
-                }
-
-                if (titles[i]) {
-                    card.title = titles[i];
-                    card.setAttribute(
-                        'aria-label',
-                        titles[i]
-                    );
-                }
-            });
-
-        stockoutRenderer();
-        updateMinMax();
-
-        const date = new Date(data.exportedAtUtc);
-        const status = statusElement();
-
-        if (status) {
-            status.textContent =
-                'Website data refreshed ' +
-                new Intl.DateTimeFormat('en-US', {
-                    dateStyle: 'medium',
-                    timeStyle: 'medium',
-                    timeZone: 'America/New_York'
-                }).format(date) + 'ET';
-                
-
-            status.title =
-                'Power BI export timestamp: ' +
-                date.toISOString();
+        if (definition) {
+            definition.textContent =
+                'Current minimum and maximum stock levels alongside recommended levels for the selected scenario and policy.';
         }
     }
 
-    (async () => {
+    function installStockoutRenderer() {
+        renderStockoutDist = function () {
+            const dist =
+                STOCKOUT_DIST[mmState.leadTime][mmState.demand][mmState.policy];
+
+            const max = Math.max(1, ...dist.bands.map(b => b.pct));
+
+            document.getElementById('stockoutDistWrap').innerHTML =
+                dist.bands.map((b, i) => `
+                    <div class="storage-bar-row">
+                        <span class="label" style="width:120px">
+                            ${esc(b.label)}
+                        </span>
+                        <div class="storage-bar-track">
+                            <div
+                                class="storage-bar-fill"
+                                style="width:${b.pct / max * 100}%;background:${BAND_COLORS[i] || '#777'}"
+                            ></div>
+                        </div>
+                        <span
+                            class="n"
+                            style="width:64px"
+                            title="${b.n} items"
+                        >${b.pct}%</span>
+                    </div>
+                `).join('');
+
+            document.getElementById('stockoutDistCaveat').textContent =
+                `Based on ${dist.total.toLocaleString()} evaluated items in the selected scenario.`;
+        };
+
+        const caption = document.querySelector(
+            '#viz-stockout-dist .dcard-cap'
+        );
+
+        if (caption) {
+            caption.textContent =
+                'Share of evaluated items in each stockout-day risk band for the selected lead time, demand profile, and policy.';
+        }
+    }
+
+    async function load() {
+        const status = statusElement();
+
+        status.textContent =
+            'Loading Min-Max analytics; existing figures are a saved snapshot.';
+
+        let applied = false;
+
         try {
             const response = await fetch(
                 './data/minmax.json',
@@ -367,30 +485,89 @@
                 throw new Error('HTTP ' + response.status);
             }
 
-            const data = await response.json();
+            const ready = prepare(await response.json());
 
-            if (
-                !Number.isFinite(
-                    Date.parse(data.exportedAtUtc)
-                )
-            ) {
-                throw new Error('Invalid export timestamp.');
-            }
+            replaceObject(mmCurrentPolicy, ready.cp);
+            replaceObject(mmSelectedPolicy, ready.sp);
+            replaceObject(mmReplenishment, ready.repl);
+            replaceObject(mmValueReduction, ready.vr);
+            replaceObject(STOCKOUT_DIST, ready.risk);
 
-            apply(data);
+            applied = true;
+
+            const values = [
+                fmt(ready.kpis[0]),
+                money(ready.kpis[1]),
+                fmt(ready.kpis[2]),
+                ready.kpis[3].toFixed(2) + 'x'
+            ];
+
+            const labels = [
+                'Parts evaluated',
+                'NIVR',
+                'Validated recommendations',
+                'Replenishment workload multiple'
+            ];
+
+            document
+                .querySelectorAll('#viz-mm-kpis .dark-kpi')
+                .forEach((card, i) => {
+                    const value = card.querySelector('.val');
+
+                    if (value) {
+                        value.textContent = values[i];
+                    }
+
+                    card.title = labels[i] + ': ' + values[i];
+                    card.setAttribute('aria-label', card.title);
+                });
+
+            installRecommendationTable(ready.recommendations);
+            installStockoutRenderer();
+
+            const previousUpdate = updateMinMax;
+
+            updateMinMax = function () {
+                const {leadTime, demand, policy} = mmState;
+
+                mmCurrentPolicy[leadTime][demand] =
+                    ready.comparisons.get(
+                        key(leadTime, demand, policy)
+                    )['Current Policy'];
+
+                previousUpdate();
+            };
+
+            updateMinMax();
+
+            const readable = new Intl.DateTimeFormat('en-US', {
+                dateStyle: 'medium',
+                timeStyle: 'medium',
+                timeZone: 'America/New_York'
+            }).format(ready.exported);
+
+            status.textContent =
+                'Website data refreshed ' + readable + ' ET';
+
+            status.title =
+                'Power BI export timestamp: ' +
+                ready.exported.toISOString();
+
+            status.style.color = '#b8b8b8';
+
         } catch (error) {
-            const status = statusElement();
+            status.textContent = applied
+                ? 'Min-Max display update failed; some figures may be incomplete.'
+                : 'Live Min-Max export could not be loaded; showing the saved page snapshot.';
 
-            if (status) {
-                status.textContent =
-                    'Live Min-Max export could not be loaded; showing the saved page snapshot.';
-                status.style.color = '#f2994a';
-            }
+            status.style.color = '#f2994a';
 
             console.error(
                 'Min-Max live data update failed:',
                 error
             );
         }
-    })();
+    }
+
+    return load();
 })();
