@@ -274,19 +274,39 @@ async function receive(store, packet, retry = false) {
   const path = partPath(p.partNumber);
   const existing = await readJson(store, path, branch);
   const record = {packet: p, chunkSha256: digest(Buffer.from(p.chunk))};
-  if (existing) {
-    check(canonical(existing.value) === canonical(record),
-      'The same part number was received with different contents.');
-  } else {
-    await store.putFile(path, jsonBytes(record), branch, undefined,
-      `Receive Min-Max part ${p.partNumber} of ${p.partCount}`);
-  }
-  const files = await store.listFiles(`${STAGING}/parts`, branch);
-  const expected = new Set(Array.from({length: p.partCount}, (_, n) =>
-    partPath(n + 1).split('/').pop()));
+  // Pin both the count and assembly to one immutable commit.
+// A branch-name directory read can lag behind a successful save.
+let sourceSha;
+if (existing) {
+  check(canonical(existing.value) === canonical(record),
+    'The same part number was received with different contents.');
+} else {
+  const saved = await store.putFile(path, jsonBytes(record), branch, undefined,
+    `Receive Min-Max part ${p.partNumber} of ${p.partCount}`);
+  sourceSha = saved?.commit?.sha;
+}
+
+let files;
+const receivedName = path.split('/').pop();
+
+for (let attempt = 0; attempt < 5; attempt++) {
+  if (existing) sourceSha = await store.head(branch);
+
+  check(typeof sourceSha === 'string' && SHA.test(sourceSha),
+    'GitHub did not return a valid staging commit. Retry this GitHub run.');
+
+  files = await store.listFiles(`${STAGING}/parts`, sourceSha);
+
+  if (files.some(f => f.type === 'file' && f.name === receivedName)) break;
+
+  check(attempt < 4,
+    `Saved part ${p.partNumber} is not readable at its commit. Retry this GitHub run.`);
+
+  await pause(250 * 2 ** attempt);
+}
   check(files.every(f => f.type === 'file' && expected.has(f.name)), 'Unexpected file in staging parts.');
   const ready = files.length === p.partCount && new Set(files.map(f => f.name)).size === p.partCount;
-  return {ready, sourceSha: ready ? await store.head(branch) : '',
+  return {ready, sourceSha: ready ? sourceSha : '',
     status: `Received ${files.length}/${p.partCount} parts for ${p.transferId}.`};
 }
 
