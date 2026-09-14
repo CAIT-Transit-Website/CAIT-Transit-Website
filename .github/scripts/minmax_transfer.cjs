@@ -304,7 +304,16 @@ for (let attempt = 0; attempt < 5; attempt++) {
 
   await pause(250 * 2 ** attempt);
 }
-  check(files.every(f => f.type === 'file' && expected.has(f.name)), 'Unexpected file in staging parts.');
+    const expected = new Set(
+    Array.from({length: p.partCount}, (_, index) =>
+      partPath(index + 1).split('/').pop()
+    )
+  );
+
+  check(
+    files.every(f => f.type === 'file' && expected.has(f.name)),
+    'Unexpected file in staging parts.'
+  );
   const ready = files.length === p.partCount && new Set(files.map(f => f.name)).size === p.partCount;
   return {ready, sourceSha: ready ? sourceSha : '',
     status: `Received ${files.length}/${p.partCount} parts for ${p.transferId}.`};
