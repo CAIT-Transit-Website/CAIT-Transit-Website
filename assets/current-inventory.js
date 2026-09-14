@@ -158,14 +158,14 @@
                 timeZone: 'America/New_York'
             }).format(exported);
 
-status.textContent =    
-    `Website data refreshed ${readable} ET` +
-    `${age > 8 * 3600000 ? ' — update is older than expected.' : ''}`;
+            status.textContent =    
+                `Website data refreshed ${readable} ET` +
+                `${age > 8 * 3600000 ? ' — update is older than expected.' : ''}`;
 
-status.title =
-    `Power BI export timestamp: ${exported.toISOString()}`;const age=Date.now()-Date.parse(data.exportedAtUtc);
-            status.textContent=`Website export: ${new Date(data.exportedAtUtc).toLocaleString()}. ${age>8*3600000?'Update is older than expected. ':''}This is the export time, not the source-data refresh time.`;
-        } catch(error) {
+            status.title =
+                `Power BI export timestamp: ${exported.toISOString()}`;
+            
+            } catch(error) {
             status.textContent='Current analytics could not be loaded. Displayed figures are a saved snapshot; do not treat them as a fresh update.';
             console.error('Current inventory update failed:',error);
         }
