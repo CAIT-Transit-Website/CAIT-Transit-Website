@@ -346,9 +346,9 @@
                 new Intl.DateTimeFormat('en-US', {
                     dateStyle: 'medium',
                     timeStyle: 'medium',
-                    timeZone: 'UTC'
-                }).format(date) +
-                ' UTC';
+                    timeZone: 'America/New_York'
+                }).format(date) + 'ET';
+                
 
             status.title =
                 'Power BI export timestamp: ' +
