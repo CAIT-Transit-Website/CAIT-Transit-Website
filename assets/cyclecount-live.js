@@ -23,7 +23,11 @@
   el('viz-cc-kpis').before(status);
 
   let data, itemMap, summaryMap, selectionMap, scenarios, targets;
-  const state = {scenarioId:1, target:40, recSort:'rank'};
+  const state = {scenarioId:1, target:40, recSort:'rank', impact:null};
+  const deckTitle = el('viz-cc-deck').querySelector('.dcard-title');
+  const deckCaption = el('viz-cc-deck').querySelector('.dcard-cap');
+  const originalDeckTitle = deckTitle.textContent;
+  const originalDeckCaption = deckCaption.textContent;
   const mapKey = (scenarioId,target) => `${scenarioId}|${target}`;
   const check = (condition,message) => { if (!condition) throw new Error(message); };
   const normalize = row => Object.fromEntries(Object.entries(row).map(([key,value]) => [key.replace(/^\[|\]$/g,''),value]));
@@ -64,6 +68,15 @@
   const currentSummary = () => summaryMap.get(mapKey(state.scenarioId,state.target));
   const selectedIds = () => selectionMap.get(mapKey(state.scenarioId,state.target)) || new Set();
   const selectedItems = () => [...selectedIds()].map(id => itemMap.get(id)).filter(Boolean);
+  function deckItems() {
+    const current = selectedIds();
+    const baseline = selectionMap.get(mapKey(1,state.target)) || new Set();
+    let ids = [...current];
+    if (state.impact === 'Common with Baseline') ids = ids.filter(id => baseline.has(id));
+    if (state.impact === 'Added by Scenario') ids = ids.filter(id => !baseline.has(id));
+    if (state.impact === 'Dropped from Baseline') ids = [...baseline].filter(id => !current.has(id));
+    return ids.map(id => itemMap.get(id)).filter(Boolean);
+  }
 
   function renderDial() {
     const circumference = 2 * Math.PI * 80;
@@ -127,14 +140,18 @@
       'Added by Scenario':{icon:'+',color:'#6FCF97',background:'rgba(39,174,96,0.18)',label:'Added by this scenario'},
       'Dropped from Baseline':{icon:'–',color:'#ff6b81',background:'rgba(204,0,51,0.18)',label:'Dropped from Baseline'}
     };
-    el('ccShiftWrap').innerHTML=`<div class="cc-shift-row">${rows.map(row => {const m=meta[row.impactType];return `<div class="cc-shift-tile"><div class="cc-shift-icon" style="background:${m.background};color:${m.color}">${m.icon}</div><p class="cc-shift-count" style="color:${m.color}">${number(row.itemCount)}</p><p class="cc-shift-label">${m.label}</p></div>`}).join('')}</div>`;
+    el('ccShiftWrap').innerHTML=`<div class="cc-shift-row">${rows.map(row => {const m=meta[row.impactType];return `<div class="cc-shift-tile" role="button" tabindex="0" data-impact="${esc(row.impactType)}" aria-pressed="${state.impact===row.impactType}" title="Filter item deck; click again to show all selected items" style="cursor:pointer;${state.impact===row.impactType?`outline:2px solid ${m.color};outline-offset:-2px;`:''}"><div class="cc-shift-icon" style="background:${m.background};color:${m.color}">${m.icon}</div><p class="cc-shift-count" style="color:${m.color}">${number(row.itemCount)}</p><p class="cc-shift-label">${m.label}</p></div>`}).join('')}</div>`;
   }
 
   function renderDeck() {
     const term=el('ccDeckSearch').value.trim().toLowerCase();
-    const rows=selectedItems().sort((a,b) => a.priorityRank-b.priorityRank).filter(item => `${item.item} ${item.description}`.toLowerCase().includes(term));
+    const source=deckItems();
+    const rows=source.sort((a,b) => a.priorityRank-b.priorityRank).filter(item => `${item.item} ${item.description}`.toLowerCase().includes(term));
+    deckTitle.textContent=state.impact?`Items — ${state.impact}`:originalDeckTitle;
+    deckCaption.textContent=state.impact?'Showing the category selected above. Click that category again to show all selected items.':originalDeckCaption;
     el('ccDeckWrap').innerHTML=rows.map(item => `<div class="cc-deck-card"><span class="cc-deck-rank">${number(item.priorityRank)}</span><span class="cc-deck-code">${esc(item.item)}</span><p class="cc-deck-desc">${esc(item.description)}</p><p class="cc-deck-usage">${item.annualUsage!=null?`Annual usage: ${number(item.annualUsage)}`:'Annual usage: —'}</p></div>`).join('') || '<p style="color:var(--dark-muted);font-size:12.5px">No selected items match this search.</p>';
-    el('ccDeckCount').textContent=`Showing ${rows.length} of ${selectedIds().size} selected items`;
+    el('ccDeckCount').textContent=state.impact?`Showing ${rows.length} of ${source.length} items — ${state.impact}`:`Showing ${rows.length} of ${selectedIds().size} selected items`;
+    if (!rows.length) el('ccDeckWrap').innerHTML='<p style="color:var(--dark-muted);font-size:12.5px">No items match this category and search.</p>';
   }
 
   function renderRecommendations() {
@@ -176,9 +193,23 @@
       state.target=targets.includes(40)?40:targets[0];
       el('ccSlider').min=0; el('ccSlider').max=targets.length-1; el('ccSlider').value=targets.indexOf(state.target);
       el('ccScenarioRow').innerHTML=scenarios.map(scenario => `<div class="cc-chip ${scenario.id===state.scenarioId?'active':''}" data-id="${scenario.id}" data-scenario="${esc(scenario.name)}" style="--chip-color:${scenarioColors[scenario.name]||'#6B7686'}">${esc(scenario.name)}</div>`).join('');
-      el('ccScenarioRow').addEventListener('click',event => {const chip=event.target.closest('[data-id]');if(chip){state.scenarioId=Number(chip.dataset.id);render();}});
-      el('ccThresholdStrip').addEventListener('click',event => {const row=event.target.closest('[data-id]');if(row){state.scenarioId=Number(row.dataset.id);render();}});
-      el('ccSlider').addEventListener('input',event => {state.target=targets[Number(event.target.value)];render();});
+      el('ccScenarioRow').addEventListener('click',event => {const chip=event.target.closest('[data-id]');if(chip){state.impact=null;state.scenarioId=Number(chip.dataset.id);render();}});
+      el('ccThresholdStrip').addEventListener('click',event => {const row=event.target.closest('[data-id]');if(row){state.impact=null;state.scenarioId=Number(row.dataset.id);render();}});
+      el('ccSlider').addEventListener('input',event => {state.impact=null;state.target=targets[Number(event.target.value)];render();});
+      const filterDeck = event => {
+        const tile=event.target.closest('[data-impact]');
+        if (!tile) return;
+        if (event.type==='keydown' && !['Enter',' '].includes(event.key)) return;
+        event.preventDefault();
+        const type=tile.dataset.impact;
+        state.impact=state.impact===type?null:type;
+        el('ccDeckSearch').value='';
+        renderShift();renderDeck();
+        const replacement=[...el('ccShiftWrap').querySelectorAll('[data-impact]')].find(node=>node.dataset.impact===type);
+        replacement?.focus({preventScroll:true});
+      };
+      el('ccShiftWrap').addEventListener('click',filterDeck);
+      el('ccShiftWrap').addEventListener('keydown',filterDeck);
       el('ccDeckSearch').addEventListener('input',renderDeck);
       el('ccRecSortRow').addEventListener('click',event => {const button=event.target.closest('[data-sort]');if(!button)return;document.querySelectorAll('#ccRecSortRow .toggle-btn').forEach(node=>node.classList.remove('active'));button.classList.add('active');state.recSort=button.dataset.sort;renderRecommendations();});
       render();
