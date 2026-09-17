@@ -2052,7 +2052,9 @@
                         </div>
                         <div class="term-item" onclick="jumpToViz('viz-cc-rec')" role="button" tabindex="0">
                             <div class="term-title">Recommended Min/Max</div>
-                            <p class="term-desc">Stock maximum changes grouped by cycle-count membership, including items requiring review.</p>
+                            <p class="term-desc">The cycle-count threshold recommendation for each selected item —
+                                current
+                                range vs. optimized range.</p>
                         </div>
                         <div class="term-item" onclick="jumpToViz('viz-cc-threshold')" role="button" tabindex="0">
                             <div class="term-title">Scenario Exposure</div>
@@ -2070,15 +2072,15 @@
                         <span class="doc-section-tag">Cycle Count Optimization</span>
                     </div>
                     <ol class="howto-list">
-                        <li><span class="howto-num">1</span><span>Pick a scenario, then set a coverage target to update selections and comparisons. The overall priority curve stays fixed.</span>
+                        <li><span class="howto-num">1</span><span>Pick a scenario chip, then drag the Coverage Target dial — every visual below updates together.</span>
                         </li>
-                        <li><span class="howto-num">2</span><span>The overall curve shows the fixed priority knee. The scenario curve shows factor coverage and its stored mandatory cutoff; Baseline uses the priority knee.</span>
+                        <li><span class="howto-num">2</span><span>The Coverage Curve plots Priority Rank against cumulative exposure captured. The moving dot shows your current cutoff; the pin shows the algorithm's suggested knee point.</span>
                         </li>
                         <li><span class="howto-num">3</span><span>The Selected Items Deck lists every item currently inside the cutoff, ranked highest-priority first.</span>
                         </li>
                         <li><span class="howto-num">4</span><span>Scenario Shift compares your current scenario's selected items to Baseline at the same coverage target, so you can see exactly what a scenario adds or removes.</span>
                         </li>
-                        <li><span class="howto-num">5</span><span>The Min/Max matrix groups selected and not-selected items by stock maximum change. Missing limits appear under Review Required.</span>
+                        <li><span class="howto-num">5</span><span>The Recommended Min/Max list shows, for each selected item, how its cycle-count range would change under the optimized policy.</span>
                         </li>
                         <li><span class="howto-num">6</span><span>The Constraint Threshold strip at the bottom shows what each scenario is actually optimizing against — Baseline has none, since it isn't constrained.</span>
                         </li>
@@ -2167,16 +2169,14 @@
 
                         <!-- Coverage curve -->
                         <div class="dcard full" id="viz-cc-curve">
-                            <p class="dcard-title">Overall priority knee</p><p class="dcard-cap" id="ccOverallCaption">Overall exposure coverage, independent of the scenario selector.</p>
+                            <p class="dcard-title">Coverage curve — priority rank vs. cumulative exposure</p>
+                            <p class="dcard-cap">The dot marks your current cutoff; the pin marks the model's suggested
+                                knee
+                                point (rank <span id="ccKneeRankLbl">45</span>).</p>
                             <div id="ccCurveWrap"></div>
                         </div>
 
-                        <div class="dcard full" id="viz-cc-scenario-curve">
-<p class="dcard-title">Scenario factor coverage</p>
-<p class="dcard-cap" id="ccScenarioCurveCaption"></p>
-<div id="ccScenarioCurveWrap"></div>
-</div>
-<!-- Scenario shift -->
+                        <!-- Scenario shift -->
                         <div class="dcard full" id="viz-cc-shift">
                             <p class="dcard-title">Scenario shift vs. Baseline</p>
                             <p class="dcard-cap">How this scenario's selected set differs from Baseline's, at the same
@@ -2187,7 +2187,7 @@
                         <!-- Selected items deck -->
                         <div class="dcard full" id="viz-cc-deck">
                             <p class="dcard-title">Selected items deck</p>
-                            <p class="dcard-cap">The exported optimized selection for this scenario and target, highest priority first.</p>
+                            <p class="dcard-cap">Every item currently inside the cutoff, highest priority first.</p>
                             <input class="dsearch" id="ccDeckSearch" style="width:100%;margin:0 0 14px"
                                    placeholder="Search item code or description">
                             <div class="cc-deck" id="ccDeckWrap"></div>
@@ -2196,9 +2196,15 @@
 
                         <!-- Recommended min/max — redesigned with visual range bars -->
                         <div class="dcard full" id="viz-cc-rec">
-                            <p class="dcard-title">Cycle Count – Min/Max Selection</p><p class="dcard-cap">Selected and not-selected items grouped by recommended stock maximum change.</p>
+                            <p class="dcard-title">Recommended min/max — selected items</p>
+                            <p class="dcard-cap">Current cycle-count range (gray) vs. the optimized range (colored), for
+                                items
+                                inside the current cutoff.</p>
                             <div class="cc-rec-summary" id="ccRecSummary"></div>
-                            
+                            <div class="toggle-row" id="ccRecSortRow" style="max-width:280px">
+                                <div class="toggle-btn active" data-sort="rank">Priority Rank</div>
+                                <div class="toggle-btn" data-sort="code">Item Code</div>
+                            </div>
                             <div class="cc-rec-list" id="ccRecWrap"></div>
                             <p class="item-count" id="ccRecCount"></p>
                         </div>
