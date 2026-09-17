@@ -1,155 +1,194 @@
-/* PiMS Cycle Count live data. Uses exported Power BI selections and measures. */
+/* PiMS Cycle Count live data — preserves the original Cycle Count page layout. */
 (() => {
   'use strict';
   const root = document.getElementById('tabCycleCount');
   if (!root) return;
   const el = id => document.getElementById(id);
-  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const fmt = v => v == null ? '—' : Number(v).toLocaleString('en-US');
-  const pct = v => v == null ? '—' : (v * 100).toFixed(2) + '%';
-  const color = {'Baseline':'#6B7686','High Movement Focus':'#2F80ED','High Value Focus':'#F2C94C','Long Lead Focus':'#F2994A','Service Risk Focus':'#CC0033'};
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const number = value => value == null ? '—' : Number(value).toLocaleString('en-US');
+  const percent = value => value == null ? '—' : `${(Number(value) * 100).toFixed(2)}%`;
+  const scenarioColors = {'Baseline':'#6B7686','High Movement Focus':'#2F80ED','High Value Focus':'#F2C94C','Long Lead Focus':'#F2994A','Service Risk Focus':'#CC0033'};
+  const thresholdCaptions = {
+    'Baseline':'Baseline carries no mandatory exposure — it ranks every item purely by priority.',
+    'High Movement Focus':'This scenario prioritizes items around mandatory annual movement.',
+    'High Value Focus':'This scenario prioritizes items around mandatory inventory value.',
+    'Long Lead Focus':'This scenario prioritizes items around mandatory lead-time exposure.',
+    'Service Risk Focus':'This scenario prioritizes items around mandatory service-risk coverage.'
+  };
   const status = document.createElement('p');
-  status.id = 'ccLiveStatus'; status.style.cssText = 'color:#bbb;font-size:12px;margin:0 0 16px';
-  status.textContent = 'Loading Cycle Count analytics…';
+  status.id = 'ccLiveStatus';
+  status.setAttribute('role','status');
+  status.style.cssText = 'color:#bbb;font-size:12px;margin:0 0 16px';
+  status.textContent = 'Loading Cycle Count analytics; existing figures are a saved snapshot.';
   el('viz-cc-kpis').before(status);
+
   let data, itemMap, summaryMap, selectionMap, scenarios, targets;
-  let scenarioId = 1, target = 40, impactType = 'Common with Baseline';
-  const key = (s,t) => `${s}|${t}`;
-  const fail = (ok, message) => { if (!ok) throw new Error(message); };
-  function normalize(row) {
-    return Object.fromEntries(Object.entries(row).map(([k,v]) => [k.replace(/^\[|\]$/g,''),v]));
-  }
+  const state = {scenarioId:1, target:40, recSort:'rank'};
+  const mapKey = (scenarioId,target) => `${scenarioId}|${target}`;
+  const check = (condition,message) => { if (!condition) throw new Error(message); };
+  const normalize = row => Object.fromEntries(Object.entries(row).map(([key,value]) => [key.replace(/^\[|\]$/g,''),value]));
+
   function validate(raw) {
-    fail(raw.schemaVersion === 1, 'Unsupported Cycle Count schema.');
-    fail(Number.isFinite(Date.parse(raw.exportedAtUtc)), 'Invalid export timestamp.');
+    check(raw && raw.schemaVersion === 1, 'Unsupported Cycle Count schema.');
+    check(Number.isFinite(Date.parse(raw.exportedAtUtc)), 'Invalid Cycle Count export timestamp.');
     const fields = ['summary','overallCurve','scenarioCurves','items','selections','impact','matrix'];
-    const d = {exportedAtUtc:raw.exportedAtUtc};
-    for (const k of fields) {
-      fail(Array.isArray(raw[k]) && raw[k].length > 0, `Missing ${k} rows.`);
-      d[k] = raw[k].map(normalize);
+    const normalized = {exportedAtUtc:raw.exportedAtUtc};
+    for (const field of fields) {
+      check(Array.isArray(raw[field]) && raw[field].length > 0, `Missing ${field} rows.`);
+      normalized[field] = raw[field].map(normalize);
     }
     const items = new Map();
-    for (const r of d.items) {
-      fail(typeof r.item === 'string' && !items.has(r.item), 'Duplicate or invalid item dictionary.');
-      items.set(r.item,r);
+    for (const row of normalized.items) {
+      check(typeof row.item === 'string' && !items.has(row.item), 'Duplicate or invalid Cycle Count item.');
+      items.set(row.item,row);
     }
-    const summaries = new Map();
-    for (const r of d.summary) {
-      const k = key(r.scenarioId,r.coverageTarget);
-      fail(!summaries.has(k) && Number.isInteger(r.selectedItems) && r.selectedItems >= 0, 'Invalid scenario summary.');
-      summaries.set(k,r);
-    }
+    const summaries = new Map(normalized.summary.map(row => [mapKey(row.scenarioId,row.coverageTarget),row]));
     const selections = new Map();
-    for (const r of d.selections) {
-      const k=key(r.scenarioId,r.coverageTarget);
-      fail(items.has(r.item) && summaries.has(k), 'Selection references an unknown item or scenario.');
-      if (!selections.has(k)) selections.set(k,new Set());
-      fail(!selections.get(k).has(r.item), 'Duplicate selected item.');
-      selections.get(k).add(r.item);
+    for (const row of normalized.selections) {
+      const key = mapKey(row.scenarioId,row.coverageTarget);
+      check(items.has(row.item) && summaries.has(key), 'A selection references an unknown item or scenario.');
+      if (!selections.has(key)) selections.set(key,new Set());
+      selections.get(key).add(row.item);
     }
-    const scenarioList = [...new Map(d.summary.map(r=>[r.scenarioId,{id:r.scenarioId,name:r.scenario}])).values()].sort((a,b)=>a.id-b.id);
-    const targetList = [...new Set(d.summary.map(r=>r.coverageTarget))].sort((a,b)=>a-b);
-    fail(scenarioList.some(s=>s.id===1), 'Baseline scenario is missing.');
-    for (const s of scenarioList) for (const t of targetList) {
-      const k=key(s.id,t), row=summaries.get(k), set=selections.get(k)||new Set();
-      fail(row && row.selectedItems===set.size, 'Selection count does not match Power BI summary.');
-      const base=selections.get(key(1,t))||new Set();
-      const expected={
-        'Common with Baseline':[...set].filter(i=>base.has(i)).length,
-        'Added by Scenario':[...set].filter(i=>!base.has(i)).length,
-        'Dropped from Baseline':[...base].filter(i=>!set.has(i)).length
-      };
-      const impact=d.impact.filter(r=>r.scenarioId===s.id&&r.coverageTarget===t);
-      fail(impact.length===3 && new Set(impact.map(r=>r.impactType)).size===3 && impact.every(r=>r.itemCount===expected[r.impactType]), 'Impact counts do not match selected sets.');
-      fail(d.matrix.some(r=>r.scenarioId===s.id&&r.coverageTarget===t), 'Missing matrix combination.');
+    const scenarioList = [...new Map(normalized.summary.map(row => [row.scenarioId,{id:row.scenarioId,name:row.scenario}])).values()].sort((a,b) => a.id-b.id);
+    const targetList = [...new Set(normalized.summary.map(row => row.coverageTarget))].sort((a,b) => a-b);
+    for (const scenario of scenarioList) for (const target of targetList) {
+      const row = summaries.get(mapKey(scenario.id,target));
+      const selected = selections.get(mapKey(scenario.id,target)) || new Set();
+      check(row && row.selectedItems === selected.size, 'Selected-item count differs from the Power BI summary.');
     }
-    for(const r of [...d.overallCurve,...d.scenarioCurves]) fail(Number.isFinite(r.rank)&&Number.isFinite(r.cumulativeCoverage)&&r.cumulativeCoverage>=0&&r.cumulativeCoverage<=1.000001,'Invalid curve point.');
-    for(const s of scenarioList) fail(d.scenarioCurves.some(r=>r.scenarioId===s.id),'Missing scenario curve.');
-    for(const r of d.matrix) fail(Number.isInteger(r.itemCount)&&r.itemCount>=0,'Invalid matrix count.');
-    return {d,items,summaries,selections,scenarioList,targetList};
+    return {normalized,items,summaries,selections,scenarioList,targetList};
   }
-  const selected = () => selectionMap.get(key(scenarioId,target)) || new Set();
-  function choose(id) { scenarioId=id; render(); }
-  function curve(rows, kneeRank, kneeCoverage, label) {
-    rows=[...rows].sort((a,b)=>a.rank-b.rank);
-    const w=760,h=250,l=48,r=20,t=24,b=38,max=Math.max(...rows.map(x=>x.rank),1);
-    const x=n=>l+(n/max)*(w-l-r), y=n=>t+(1-n)*(h-t-b);
-    const path=rows.map((p,i)=>`${i?'L':'M'}${x(p.rank)},${y(p.cumulativeCoverage)}`).join(' ');
-    const point=rows.find(p=>p.rank===kneeRank);
-    const cov=Number.isFinite(kneeCoverage)?kneeCoverage:point?.cumulativeCoverage;
-    return `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="${esc(label)}">
-      ${[0,.5,1].map(v=>`<line x1="${l}" x2="${w-r}" y1="${y(v)}" y2="${y(v)}" stroke="#333"/><text x="${l-8}" y="${y(v)+4}" fill="#bbb" font-size="11" text-anchor="end">${v*100}%</text>`).join('')}
-      <path d="${path}" fill="none" stroke="#2F80ED" stroke-width="3"/>
-      ${point&&Number.isFinite(cov)?`<line x1="${x(kneeRank)}" x2="${x(kneeRank)}" y1="${t}" y2="${h-b}" stroke="#ff899f" stroke-dasharray="4 4"/><circle cx="${x(kneeRank)}" cy="${y(cov)}" r="6" fill="#CC0033"><title>Rank ${kneeRank}: ${pct(cov)}</title></circle>`:''}
-      <text x="${l}" y="${h-8}" fill="#bbb" font-size="11">Rank 0</text><text x="${w-r}" y="${h-8}" text-anchor="end" fill="#bbb" font-size="11">Rank ${max}</text>
-      ${rows.map(p=>`<circle cx="${x(p.rank)}" cy="${y(p.cumulativeCoverage)}" r="5" fill="transparent"><title>Rank ${p.rank}: ${pct(p.cumulativeCoverage)}</title></circle>`).join('')}
-    </svg>`;
+
+  const currentScenario = () => scenarios.find(s => s.id === state.scenarioId);
+  const currentSummary = () => summaryMap.get(mapKey(state.scenarioId,state.target));
+  const selectedIds = () => selectionMap.get(mapKey(state.scenarioId,state.target)) || new Set();
+  const selectedItems = () => [...selectedIds()].map(id => itemMap.get(id)).filter(Boolean);
+
+  function renderDial() {
+    const circumference = 2 * Math.PI * 80;
+    const fraction = targets.length > 1 ? targets.indexOf(state.target) / (targets.length - 1) : 1;
+    const color = scenarioColors[currentScenario().name] || '#CC0033';
+    el('ccDialSvg').innerHTML = `<circle cx="100" cy="100" r="80" fill="none" stroke="#2c2c2c" stroke-width="14"/><circle cx="100" cy="100" r="80" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference * (1-fraction)}" transform="rotate(-90 100 100)"/>`;
+    el('ccDialPct').textContent = `${state.target}%`;
+    el('ccSliderReadout').textContent = `${selectedIds().size} of ${itemMap.size} items selected`;
   }
+
+  function renderKpis() {
+    const row = currentSummary();
+    el('ccKpiTotal').textContent = number(itemMap.size);
+    el('ccKpiSelected').textContent = number(row.selectedItems);
+    el('ccKpiRate').textContent = `${(row.selectedItems / itemMap.size * 100).toFixed(1)}%`;
+    el('ccKpiThreshold').textContent = row.exposureText ?? '—';
+    el('ccKpiThresholdLbl').textContent = row.exposureTitle;
+  }
+
+  function renderThreshold() {
+    const scenario = currentScenario();
+    const row = currentSummary();
+    const color = scenarioColors[scenario.name] || '#CC0033';
+    el('ccThreshHeroDot').style.background = color;
+    el('ccThreshHeroVal').textContent = row.exposureText ?? '—';
+    el('ccThreshHeroVal').style.color = row.exposureText === '—' ? '#d8d8d8' : color;
+    el('ccThreshHeroScenario').textContent = row.exposureTitle;
+    el('ccThreshCaption').textContent = thresholdCaptions[scenario.name] || '';
+    el('ccThresholdStrip').innerHTML = scenarios.map(scenarioOption => {
+      const option = summaryMap.get(mapKey(scenarioOption.id,state.target));
+      const active = scenarioOption.id === state.scenarioId;
+      return `<div class="cc-thresh-row ${active?'active':''}" data-id="${scenarioOption.id}" style="${active?`border-left-color:${scenarioColors[scenarioOption.name]||'#CC0033'}`:''}"><span class="cc-thresh-dot" style="background:${scenarioColors[scenarioOption.name]||'#CC0033'}"></span><span class="name">${esc(scenarioOption.name)}</span><span class="val">${esc(option.exposureText ?? '—')}</span></div>`;
+    }).join('');
+  }
+
+  function renderCurve() {
+    const rows = [...data.overallCurve].sort((a,b) => a.rank-b.rank);
+    const width=760,height=240,left=40,right=20,top=16,bottom=30;
+    const plotWidth=width-left-right, plotHeight=height-top-bottom;
+    const maxRank=Math.max(...rows.map(row => row.rank));
+    const x=rank => left + (rank-1)/(Math.max(maxRank-1,1))*plotWidth;
+    const y=coverage => top + (1-coverage)*plotHeight;
+    const path=rows.map((row,index) => `${index?'L':'M'} ${x(row.rank)} ${y(row.cumulativeCoverage)}`).join(' ');
+    const area=`${path} L ${x(maxRank)} ${top+plotHeight} L ${x(1)} ${top+plotHeight} Z`;
+    const selectedRanks=selectedItems().map(item => item.priorityRank).filter(Number.isFinite);
+    const cutoffRank=selectedRanks.length ? Math.max(...selectedRanks) : null;
+    const cutoff=rows.find(row => row.rank===cutoffRank);
+    const knee=rows.find(row => row.isKneePoint===1 || row.isKneePoint===true) || rows.find(row => row.rank===row.kneeRank);
+    el('ccKneeRankLbl').textContent = knee?.kneeRank ?? '—';
+    el('ccCurveWrap').innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="100%" height="240"><defs><linearGradient id="ccCurveGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#CC0033" stop-opacity="0.45"/><stop offset="100%" stop-color="#CC0033" stop-opacity="0"/></linearGradient></defs><line x1="${left}" y1="${top}" x2="${left}" y2="${top+plotHeight}" stroke="#2c2c2c"/><line x1="${left}" y1="${top+plotHeight}" x2="${left+plotWidth}" y2="${top+plotHeight}" stroke="#2c2c2c"/><text x="${left-8}" y="${top+4}" text-anchor="end" font-size="10" fill="#9A9A9A">100%</text><text x="${left-8}" y="${top+plotHeight+4}" text-anchor="end" font-size="10" fill="#9A9A9A">0%</text><text x="${left}" y="${height-6}" font-size="10" fill="#9A9A9A">Rank 1</text><text x="${left+plotWidth}" y="${height-6}" text-anchor="end" font-size="10" fill="#9A9A9A">Rank ${maxRank}</text><path d="${area}" fill="url(#ccCurveGrad)"/><path d="${path}" fill="none" stroke="#CC0033" stroke-width="2.5"/>${cutoff?`<line x1="${x(cutoff.rank)}" y1="${y(cutoff.cumulativeCoverage)}" x2="${x(cutoff.rank)}" y2="${top+plotHeight}" stroke="#CC0033" stroke-dasharray="3 3"/><circle cx="${x(cutoff.rank)}" cy="${y(cutoff.cumulativeCoverage)}" r="6" fill="#fff" stroke="#CC0033" stroke-width="3"><title>Current selection cutoff: rank ${cutoff.rank}, ${percent(cutoff.cumulativeCoverage)}</title></circle>`:''}${knee?`<text x="${x(knee.rank)}" y="${y(knee.cumulativeCoverage)-6}" text-anchor="middle" font-size="26"><title>Model knee: rank ${knee.rank}, ${percent(knee.cumulativeCoverage)}</title>📍</text>`:''}</svg>`;
+  }
+
+  function renderShift() {
+    const rows=data.impact.filter(row => row.scenarioId===state.scenarioId && row.coverageTarget===state.target).sort((a,b) => a.sortOrder-b.sortOrder);
+    if (state.scenarioId===1) {
+      el('ccShiftWrap').innerHTML='<p style="color:var(--dark-muted);font-size:12.5px;padding:8px 2px">Baseline is the reference scenario — switch to another scenario above to see how its selection differs.</p>';
+      return;
+    }
+    const meta={
+      'Common with Baseline':{icon:'=',color:'#d8d8d8',background:'#2c2c2c',label:'Common with Baseline'},
+      'Added by Scenario':{icon:'+',color:'#6FCF97',background:'rgba(39,174,96,0.18)',label:'Added by this scenario'},
+      'Dropped from Baseline':{icon:'–',color:'#ff6b81',background:'rgba(204,0,51,0.18)',label:'Dropped from Baseline'}
+    };
+    el('ccShiftWrap').innerHTML=`<div class="cc-shift-row">${rows.map(row => {const m=meta[row.impactType];return `<div class="cc-shift-tile"><div class="cc-shift-icon" style="background:${m.background};color:${m.color}">${m.icon}</div><p class="cc-shift-count" style="color:${m.color}">${number(row.itemCount)}</p><p class="cc-shift-label">${m.label}</p></div>`}).join('')}</div>`;
+  }
+
   function renderDeck() {
     const term=el('ccDeckSearch').value.trim().toLowerCase();
-    const rows=[...selected()].map(i=>itemMap.get(i)).sort((a,b)=>a.priorityRank-b.priorityRank).filter(i=>(i.item+' '+i.description).toLowerCase().includes(term));
-    el('ccDeckWrap').innerHTML=rows.map(i=>`<div class="cc-deck-card"><span class="cc-deck-rank">${fmt(i.priorityRank)}</span><span class="cc-deck-code">${esc(i.item)}</span><p class="cc-deck-desc">${esc(i.description)}</p><p class="cc-deck-usage">Main driver: ${esc(i.mainDriver??'—')} · Priority index: ${fmt(i.priorityIndex)}</p></div>`).join('')||'<p>No matching selected items.</p>';
-    el('ccDeckCount').textContent=`Showing ${rows.length} of ${selected().size} selected items`;
+    const rows=selectedItems().sort((a,b) => a.priorityRank-b.priorityRank).filter(item => `${item.item} ${item.description}`.toLowerCase().includes(term));
+    el('ccDeckWrap').innerHTML=rows.map(item => `<div class="cc-deck-card"><span class="cc-deck-rank">${number(item.priorityRank)}</span><span class="cc-deck-code">${esc(item.item)}</span><p class="cc-deck-desc">${esc(item.description)}</p><p class="cc-deck-usage">${item.annualUsage!=null?`Annual usage: ${number(item.annualUsage)}`:'Annual usage: —'}</p></div>`).join('') || '<p style="color:var(--dark-muted);font-size:12.5px">No selected items match this search.</p>';
+    el('ccDeckCount').textContent=`Showing ${rows.length} of ${selectedIds().size} selected items`;
   }
-  function renderImpact() {
-    const counts=data.impact.filter(r=>r.scenarioId===scenarioId&&r.coverageTarget===target).sort((a,b)=>a.sortOrder-b.sortOrder);
-    el('ccShiftWrap').innerHTML=`<div class="cc-shift-row">${counts.map(r=>`<button type="button" data-impact="${esc(r.impactType)}" class="cc-shift-tile" style="background:#191919;color:#eee;text-align:left;cursor:pointer;border:1px solid ${r.impactType===impactType?'#2F80ED':'#444'}"><p class="cc-shift-count">${fmt(r.itemCount)}</p><p class="cc-shift-label">${esc(r.impactType)}</p></button>`).join('')}</div><div id="ccImpactItems" style="max-height:260px;overflow:auto;margin-top:16px"></div>`;
-    const base=selectionMap.get(key(1,target))||new Set(), current=selected();
-    const ids=impactType==='Dropped from Baseline'?[...base].filter(i=>!current.has(i)):[...current].filter(i=>impactType==='Common with Baseline'?base.has(i):!base.has(i));
-    el('ccImpactItems').innerHTML=`<p>${esc(impactType)}: ${ids.length} items</p>`+ids.map(i=>itemMap.get(i)).sort((a,b)=>a.priorityRank-b.priorityRank).map(i=>`<div style="padding:7px 0;border-bottom:1px solid #333">${esc(i.item)} — ${esc(i.description)}</div>`).join('');
+
+  function renderRecommendations() {
+    let rows=selectedItems().map(item => {
+      const complete=[item.currentMin,item.currentMax,item.recommendedMin,item.recommendedMax].every(value => value!=null && Number.isFinite(Number(value)));
+      if (!complete) return {item,kind:'review',pct:null};
+      const currentSpan=Number(item.currentMax)-Number(item.currentMin);
+      const recommendedSpan=Number(item.recommendedMax)-Number(item.recommendedMin);
+      const change=currentSpan>0?(recommendedSpan-currentSpan)/currentSpan*100:0;
+      return {item,kind:Math.abs(change)<.5?'same':change<0?'narrower':'wider',pct:change};
+    });
+    rows.sort(state.recSort==='code'?(a,b)=>a.item.item.localeCompare(b.item.item):(a,b)=>a.item.priorityRank-b.item.priorityRank);
+    const counts={narrower:0,wider:0,same:0,review:0}; rows.forEach(row=>counts[row.kind]++);
+    el('ccRecSummary').innerHTML=`<span class="cc-rec-summary-icon">📊</span><span><strong>${counts.narrower}</strong> tighter, <strong>${counts.wider}</strong> wider, <strong>${counts.same}</strong> unchanged, and <strong>${counts.review}</strong> requiring review.</span>`;
+    el('ccRecWrap').innerHTML=rows.map(({item,kind,pct}) => {
+      const complete=kind!=='review';
+      const maximum=complete?Math.max(Number(item.currentMax),Number(item.recommendedMax),1):1;
+      const currentLeft=complete?Number(item.currentMin)/maximum*100:0;
+      const currentWidth=complete?Math.max((Number(item.currentMax)-Number(item.currentMin))/maximum*100,1):0;
+      const recommendedLeft=complete?Number(item.recommendedMin)/maximum*100:0;
+      const recommendedWidth=complete?Math.max((Number(item.recommendedMax)-Number(item.recommendedMin))/maximum*100,1):0;
+      const badge=kind==='review'?'Review required':kind==='same'?'No change':kind==='narrower'?`${Math.abs(pct).toFixed(0)}% tighter`:`+${pct.toFixed(0)}% wider`;
+      return `<div class="cc-rec-card"><div class="cc-rec-card-top"><span class="cc-rec-code">${esc(item.item)}</span><span class="cc-rec-desc">${esc(item.description)}</span><span class="cc-rec-badge ${kind}">${badge}</span></div><div class="cc-rec-bar-wrap"><div class="cc-rec-bar-track"></div>${complete?`<div class="cc-rec-bar-seg" style="left:${currentLeft}%;width:${currentWidth}%"></div>`:''}<div class="cc-rec-bar-track rec-track"></div>${complete?`<div class="cc-rec-bar-seg rec ${kind}" style="left:${recommendedLeft}%;width:${recommendedWidth}%"></div>`:''}</div><div class="cc-rec-bar-labels"><span>Current: ${complete?`${number(item.currentMin)}–${number(item.currentMax)}`:'—'}</span><span>Recommended: ${complete?`${number(item.recommendedMin)}–${number(item.recommendedMax)}`:'—'}</span></div></div>`;
+    }).join('') || '<p style="color:var(--dark-muted);font-size:12.5px">No items selected at this coverage target.</p>';
+    el('ccRecCount').textContent=`Showing ${rows.length} of ${selectedIds().size} selected items`;
   }
-  function renderMatrix() {
-    const rows=data.matrix.filter(r=>r.scenarioId===scenarioId&&r.coverageTarget===target);
-    const actions=['Increase Max','Maintain Max','Reduce Max','Review Required'];
-    const statuses=['Not Selected','Selected'];
-    fail(rows.every(r=>actions.includes(r.minMaxAction)&&statuses.includes(r.selectionStatus)), 'Unexpected matrix category.');
-    const count=(s,a)=>rows.filter(r=>(!s||r.selectionStatus===s)&&(!a||r.minMaxAction===a)).reduce((n,r)=>n+r.itemCount,0);
-    const cell=v=>`<td style="padding:12px;text-align:right;border-bottom:1px solid #333">${fmt(v)}</td>`;
-    el('ccRecWrap').innerHTML=`<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;color:#eee"><thead><tr><th style="text-align:left;padding:12px">Selection status</th>${[...actions,'Total'].map(a=>`<th style="padding:12px;text-align:right">${a}</th>`).join('')}</tr></thead><tbody>${[...statuses,'Total'].map(s=>`<tr><th style="text-align:left;padding:12px">${s}</th>${actions.map(a=>cell(count(s==='Total'?null:s,a))).join('')}${cell(count(s==='Total'?null:s,null))}</tr>`).join('')}</tbody></table></div>`;
-    el('ccRecSummary').textContent='Stock maximum changes for items in the Min–Max recommendation dataset. Review Required means a current or recommended maximum is missing.';
-    el('ccRecCount').textContent=`${count(null,null)} items in the Min–Max comparison; the cycle-count ranking contains ${itemMap.size} items.`;
-  }
+
   function render() {
-    const row=summaryMap.get(key(scenarioId,target));
-    el('ccKpiTotal').textContent=fmt(itemMap.size);el('ccKpiSelected').textContent=fmt(row.selectedItems);
-    el('ccKpiRate').textContent=(row.selectedItems/itemMap.size*100).toFixed(1)+'%';
-    el('ccKpiThreshold').textContent=row.exposureText??'—';el('ccKpiThresholdLbl').textContent=row.exposureTitle;
-    el('ccScenarioRow').querySelectorAll('[data-scenario]').forEach(n=>n.classList.toggle('active',n.dataset.scenario===row.scenario));
-    el('ccDialPct').textContent=target+'%';el('ccSliderReadout').textContent=`${row.selectedItems} of ${itemMap.size} items selected`;
-    const c=2*Math.PI*80, fraction=target/100;
-    el('ccDialSvg').innerHTML=`<circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-width="14"/><circle cx="100" cy="100" r="80" fill="none" stroke="${color[row.scenario]||'#2F80ED'}" stroke-width="14" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-fraction)}" transform="rotate(-90 100 100)"/>`;
-    el('ccThreshHeroVal').textContent=row.exposureText??'—';el('ccThreshHeroScenario').textContent=row.exposureTitle;
-    el('ccThreshHeroDot').style.background=color[row.scenario]||'#2F80ED';
-    el('ccThreshCaption').textContent=`${fmt(row.mandatoryItems)} mandatory items. Exposure is exported directly from Power BI.`;
-    el('ccThresholdStrip').innerHTML=scenarios.map(s=>{const r=summaryMap.get(key(s.id,target));return `<button type="button" class="cc-thresh-row ${s.id===scenarioId?'active':''}" data-id="${s.id}" style="width:100%;background:transparent;color:inherit;text-align:left;cursor:pointer"><span class="name">${esc(s.name)}</span><span class="val">${esc(r.exposureText??'—')}</span></button>`}).join('');
-    const knee=data.overallCurve.find(r=>r.isKneePoint===1||r.isKneePoint===true)||data.overallCurve[0];
-    el('ccCurveWrap').innerHTML=curve(data.overallCurve,knee.kneeRank,knee.kneeCoverage,'Overall priority exposure curve');
-    el('ccOverallCaption').textContent=`Overall priority knee: rank ${knee.kneeRank}, covering ${pct(knee.kneeCoverage)}. Independent of scenario and coverage target.`;
-    el('ccScenarioCurveWrap').innerHTML=curve(data.scenarioCurves.filter(r=>r.scenarioId===scenarioId),row.kneeRank,row.kneeCoverage,'Scenario factor coverage curve');
-    el('ccScenarioCurveCaption').textContent=`${row.scenario}: marker at rank ${row.kneeRank}, covering ${pct(row.kneeCoverage)} of its factor exposure. ${scenarioId===1?'Baseline uses the stored priority knee.':'The marker is the stored mandatory-item cutoff.'}`;
-    renderImpact();renderDeck();renderMatrix();
+    document.querySelectorAll('#ccScenarioRow .cc-chip').forEach(chip => chip.classList.toggle('active',Number(chip.dataset.id)===state.scenarioId));
+    renderKpis(); renderDial(); renderThreshold(); renderCurve(); renderShift(); renderDeck(); renderRecommendations();
   }
+
   async function load() {
     try {
       const response=await fetch(new URL('./data/cyclecount.json',document.baseURI),{cache:'no-store'});
-      fail(response.ok,`Cycle Count data request returned ${response.status}.`);
+      check(response.ok,`Cycle Count data request returned ${response.status}.`);
       const checked=validate(await response.json());
-      ({d:data,items:itemMap,summaries:summaryMap,selections:selectionMap,scenarioList:scenarios,targetList:targets}=checked);
-      target=targets.includes(40)?40:targets[0];
-      el('ccSlider').min=0;el('ccSlider').max=targets.length-1;el('ccSlider').value=targets.indexOf(target);
-      el('ccScenarioRow').innerHTML=scenarios.map(s=>`<button type="button" class="cc-chip" data-scenario="${esc(s.name)}" data-id="${s.id}" style="--chip-color:${color[s.name]||'#2F80ED'}">${esc(s.name)}</button>`).join('');
-      el('ccScenarioRow').addEventListener('click',e=>{const n=e.target.closest('[data-id]');if(n)choose(Number(n.dataset.id));});
-      el('ccSlider').addEventListener('input',e=>{target=targets[Number(e.target.value)];render();});
+      ({normalized:data,items:itemMap,summaries:summaryMap,selections:selectionMap,scenarioList:scenarios,targetList:targets}=checked);
+      state.target=targets.includes(40)?40:targets[0];
+      el('ccSlider').min=0; el('ccSlider').max=targets.length-1; el('ccSlider').value=targets.indexOf(state.target);
+      el('ccScenarioRow').innerHTML=scenarios.map(scenario => `<div class="cc-chip ${scenario.id===state.scenarioId?'active':''}" data-id="${scenario.id}" data-scenario="${esc(scenario.name)}" style="--chip-color:${scenarioColors[scenario.name]||'#6B7686'}">${esc(scenario.name)}</div>`).join('');
+      el('ccScenarioRow').addEventListener('click',event => {const chip=event.target.closest('[data-id]');if(chip){state.scenarioId=Number(chip.dataset.id);render();}});
+      el('ccThresholdStrip').addEventListener('click',event => {const row=event.target.closest('[data-id]');if(row){state.scenarioId=Number(row.dataset.id);render();}});
+      el('ccSlider').addEventListener('input',event => {state.target=targets[Number(event.target.value)];render();});
       el('ccDeckSearch').addEventListener('input',renderDeck);
-      el('ccThresholdStrip').addEventListener('click',e=>{const n=e.target.closest('[data-id]');if(n)choose(Number(n.dataset.id));});
-      el('ccShiftWrap').addEventListener('click',e=>{const n=e.target.closest('[data-impact]');if(n){impactType=n.dataset.impact;renderImpact();}});
+      el('ccRecSortRow').addEventListener('click',event => {const button=event.target.closest('[data-sort]');if(!button)return;document.querySelectorAll('#ccRecSortRow .toggle-btn').forEach(node=>node.classList.remove('active'));button.classList.add('active');state.recSort=button.dataset.sort;renderRecommendations();});
       render();
-      const exported=new Date(data.exportedAtUtc),age=Date.now()-exported.getTime();
+      const exported=new Date(data.exportedAtUtc);
+      const age=Date.now()-exported.getTime();
       const readable=new Intl.DateTimeFormat('en-US',{dateStyle:'medium',timeStyle:'medium',timeZone:'America/New_York'}).format(exported);
-      status.textContent=`Website data refreshed ${readable} ET`+(age>8*3600000?' — update is older than expected.':'');
+      status.textContent=`Website data refreshed ${readable} ET`+`${age>8*3600000?' — update is older than expected.':''}`;
       status.title=`Power BI export timestamp: ${exported.toISOString()}`;
     } catch(error) {
-      status.textContent='Cycle Count analytics could not be loaded. Refresh the page; if this continues, check the browser console.';
+      status.textContent='Cycle Count analytics could not be loaded. Displayed figures are a saved snapshot; do not treat them as a fresh update.';
       console.error('Cycle Count update failed:',error);
     }
   }
