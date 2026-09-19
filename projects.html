@@ -277,6 +277,125 @@
         }
     </style>
 <link rel="stylesheet" href="assets/site-guide.css">
+<style>
+/* Shared user-guide control for the site header. */
+.topnav-inner {
+    position: relative;
+    padding-right: 82px;
+}
+
+.topnav-inner .guide-trigger {
+    position: absolute;
+    top: 29px;
+    right: 28px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+.topnav-inner .guide-trigger:hover,
+.topnav-inner .guide-trigger[aria-expanded="true"] {
+    border-color: #CC0033;
+    background: rgba(204, 0, 51, .15);
+}
+
+.topnav-inner .guide-trigger:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+}
+
+.site-guide-popover {
+    position: fixed;
+    z-index: 200;
+    display: none;
+    width: 380px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: 20px 22px;
+    border-radius: 14px;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .28);
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+}
+
+.site-guide-popover.open { display: block; }
+
+.site-guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.site-guide-header h3 {
+    margin: 0;
+    color: #000;
+    font: 700 15px 'Archivo', sans-serif;
+}
+
+.site-guide-close {
+    border: 0;
+    background: none;
+    color: #6B7686;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 2px 6px;
+}
+
+.site-guide-close:hover { color: #CC0033; }
+
+.site-guide-popover .site-guide-sub {
+    margin: 0 0 12px;
+    color: #6B7686;
+    font-size: 13px;
+}
+
+.site-guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-guide-steps li {
+    display: flex;
+    gap: 9px;
+    color: #000;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.site-guide-steps .num {
+    display: flex;
+    flex: 0 0 18px;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: #F5F6F8;
+    color: #6B7686;
+    font: 10.5px 'IBM Plex Mono', monospace;
+}
+
+</style>
 </head>
 <body>
 
