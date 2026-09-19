@@ -344,6 +344,8 @@
             text-decoration: underline;
         }
     </style>
+<link rel="stylesheet" href="assets/site-guide.css">
+<link rel="stylesheet" href="assets/page-updates.css">
 </head>
 <body>
 
@@ -372,26 +374,29 @@
     <header class="page-header">
         <span class="eyebrow">Help</span>
         <h1>Support</h1>
-        <p class="page-sub">If something on the dashboard looks wrong — here's where to go.</p>
+        <p class="page-sub">Contact Balaji Sharma or Rutgers-CAIT using the enquiry forms below. All fields are required except phone number.</p>
     </header>
 
-    <div class="page-content">
-        <div class="contact-grid">
-            <div class="contact-card">
-                <div class="cc-label">General Inquiries</div>
-                <div class="cc-value">bbs54@soe.rutgers.edu</div>
-                <div class="cc-note">Contact information for PiMS (Parts Inventory Management System).</div>
-            </div>
-            <div class="contact-card">
-                <div class="cc-label">Technical Support</div>
-                <div class="cc-value">cait@soe.rutgers.edu</div>
-                <div class="cc-note">Contact information for CAIT (Rutgers Center for Advanced Infrastructure and
-                    Transportation.
-                </div>
-            </div>
-        </div>
-    </div>
-
+<main class="page-content"><div class="contact-grid"><section class="contact-card" aria-labelledby="balaji-title"><div class="cc-label">General Inquiries</div><h2 class="cc-value" id="balaji-title">Balaji Sharma</h2>
+<form class="enquiry-form" data-endpoint="">
+<div class="form-field"><label for="balaji-firstName">First name</label><input id="balaji-firstName" name="firstName" type="text" autocomplete="given-name" maxlength="200" required></div>
+<div class="form-field"><label for="balaji-lastName">Last name</label><input id="balaji-lastName" name="lastName" type="text" autocomplete="family-name" maxlength="200" required></div>
+<div class="form-field"><label for="balaji-email">Email address</label><input id="balaji-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+<div class="form-field"><label for="balaji-phone">Phone number (optional)</label><input id="balaji-phone" name="phone" type="tel" autocomplete="tel" maxlength="200" ></div>
+<div class="form-field"><label for="balaji-organization">Organization</label><input id="balaji-organization" name="organization" type="text" autocomplete="organization" maxlength="200" required></div>
+<div class="form-field"><label for="balaji-reason">Reason for Contacting Us</label><textarea id="balaji-reason" name="reason" required aria-describedby="balaji-count"></textarea><span class="word-count" id="balaji-count">0 / 500 words</span></div>
+<button class="enquiry-submit" type="submit">Submit enquiry</button><p class="form-status" role="status" aria-live="polite"></p>
+</form></section>
+<section class="contact-card" aria-labelledby="cait-title"><div class="cc-label">Technical Support</div><h2 class="cc-value" id="cait-title">Rutgers-CAIT</h2>
+<form class="enquiry-form" data-endpoint="">
+<div class="form-field"><label for="cait-firstName">First name</label><input id="cait-firstName" name="firstName" type="text" autocomplete="given-name" maxlength="200" required></div>
+<div class="form-field"><label for="cait-lastName">Last name</label><input id="cait-lastName" name="lastName" type="text" autocomplete="family-name" maxlength="200" required></div>
+<div class="form-field"><label for="cait-email">Email address</label><input id="cait-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+<div class="form-field"><label for="cait-phone">Phone number (optional)</label><input id="cait-phone" name="phone" type="tel" autocomplete="tel" maxlength="200" ></div>
+<div class="form-field"><label for="cait-organization">Organization</label><input id="cait-organization" name="organization" type="text" autocomplete="organization" maxlength="200" required></div>
+<div class="form-field"><label for="cait-reason">Reason for Contacting Us</label><textarea id="cait-reason" name="reason" required aria-describedby="cait-count"></textarea><span class="word-count" id="cait-count">0 / 500 words</span></div>
+<button class="enquiry-submit" type="submit">Submit enquiry</button><p class="form-status" role="status" aria-live="polite"></p>
+</form></section></div></main>
 </div>
 <div class="rutgers-footer">
     <div class="rutgers-footer-inner">
@@ -406,5 +411,7 @@
     </div>
 </div>
 
+<script src="assets/site-guide.js"></script>
+<script src="assets/support-form.js"></script>
 </body>
 </html>
