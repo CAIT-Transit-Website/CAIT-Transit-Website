@@ -549,7 +549,7 @@
 
 <main class="page-content support-content">
 <div class="support-layout">
-<section class="support-intro" aria-labelledby="contact-heading"><span class="support-accent"></span><h2 id="contact-heading">Have a<br>question?</h2><p>We’re here to help. Choose who you’d like to contact and tell us how we can support you.</p><p><strong>Balaji Sharma</strong><br>Project and dashboard enquiries.</p><p><strong>Rutgers-CAIT</strong><br>Research and general CAIT enquiries.</p><p>All fields are required except phone number.</p></section>
+<section class="support-intro" aria-labelledby="contact-heading"><span class="support-accent"></span><h2 id="contact-heading">Have a<br>question?</h2><p>We’re here to help. Choose who you’d like to contact and tell us how we can support you.</p><p><strong>Balaji Sharma</strong><br>Technical and Project Enquiries.</p><p><strong>Rutgers-CAIT</strong><br>General Enquiries.</p><p>All fields are required except phone number.</p></section>
 <form class="enquiry-form" data-endpoint="" aria-label="Contact enquiry">
 <div class="form-field"><label for="enquiry-recipient">Who would you like to contact?</label><select id="enquiry-recipient" name="recipient" required><option value="" selected disabled>Select a recipient</option><option value="balaji">Balaji Sharma</option><option value="cait">Rutgers-CAIT</option></select></div>
 <div class="form-name-row"><div class="form-field"><label for="enquiry-firstName">First name</label><input id="enquiry-firstName" name="firstName" type="text" autocomplete="given-name" maxlength="200" required></div>
@@ -559,7 +559,7 @@
 <div class="form-field"><label for="enquiry-organization">Organization</label><input id="enquiry-organization" name="organization" type="text" autocomplete="organization" maxlength="200" required></div>
 
 <div class="form-field"><label for="enquiry-reason">Reason for Contacting Us</label><textarea id="enquiry-reason" name="reason" required aria-describedby="enquiry-count" placeholder="Tell us how we can help…"></textarea><span class="word-count" id="enquiry-count">0 / 500 words</span></div>
-<button class="enquiry-submit" type="submit" disabled>Submit enquiry</button><p class="form-status" role="status" aria-live="polite">Online enquiries are not yet available.</p>
+<button class="enquiry-submit" type="submit" disabled>Submit enquiry</button><p class="form-status" role="status" aria-live="polite"></p>
 </form></div></main>
 </div>
 <div class="rutgers-footer">
@@ -689,7 +689,7 @@
         const endpoint = form.dataset.endpoint;
         if (!endpoint) {
             button.disabled = true;
-            status.textContent = 'Online enquiries are not yet available.';
+            status.textContent = '';
         }
         function validateWords() {
             const count = reason.value.trim().split(/\s+/u).filter(Boolean).length;
