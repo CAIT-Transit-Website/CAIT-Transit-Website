@@ -343,6 +343,18 @@
             color: #FFFFFF;
             text-decoration: underline;
         }
+        .enquiry-embed {
+           min-width: 0;
+        }
+
+        .enquiry-embed iframe {
+          display: block;
+          width: 100%;
+          height: 850px;
+          border: 0;
+          border-radius: 8px;
+          background: #fff;
+      }
     </style>
 <style>
 /* Shared user-guide control for the site header. */
@@ -550,17 +562,14 @@
 <main class="page-content support-content">
 <div class="support-layout">
 <section class="support-intro" aria-labelledby="contact-heading"><span class="support-accent"></span><h2 id="contact-heading">Have a<br>question?</h2><p>We’re here to help. Choose who you’d like to contact and tell us how we can support you.</p><p><strong>Balaji Sharma</strong><br>Technical and Project Enquiries.</p><p><strong>Rutgers-CAIT</strong><br>General Enquiries.</p><p>All fields are required except phone number.</p></section>
-<form class="enquiry-form" data-endpoint="" aria-label="Contact enquiry">
-<div class="form-field"><label for="enquiry-recipient">Who would you like to contact?</label><select id="enquiry-recipient" name="recipient" required><option value="" selected disabled>Select a recipient</option><option value="balaji">Balaji Sharma</option><option value="cait">Rutgers-CAIT</option></select></div>
-<div class="form-name-row"><div class="form-field"><label for="enquiry-firstName">First name</label><input id="enquiry-firstName" name="firstName" type="text" autocomplete="given-name" maxlength="200" required></div>
-<div class="form-field"><label for="enquiry-lastName">Last name</label><input id="enquiry-lastName" name="lastName" type="text" autocomplete="family-name" maxlength="200" required></div>
-</div><div class="form-field"><label for="enquiry-email">Email address</label><input id="enquiry-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
-<div class="form-field"><label for="enquiry-phone">Phone number (optional)</label><input id="enquiry-phone" name="phone" type="tel" autocomplete="tel" maxlength="200" ></div>
-<div class="form-field"><label for="enquiry-organization">Organization</label><input id="enquiry-organization" name="organization" type="text" autocomplete="organization" maxlength="200" required></div>
-
-<div class="form-field"><label for="enquiry-reason">Reason for Contacting Us</label><textarea id="enquiry-reason" name="reason" required aria-describedby="enquiry-count" placeholder="Tell us how we can help…"></textarea><span class="word-count" id="enquiry-count">0 / 500 words</span></div>
-<button class="enquiry-submit" type="submit" disabled>Submit enquiry</button><p class="form-status" role="status" aria-live="polite"></p>
-</form></div></main>
+<div class="enquiry-embed">
+    <iframe
+        title="Rutgers-CAIT enquiry form"
+        src="https://rutgers.ca1.qualtrics.com/jfe/form/SV_0qezHO3fj8dtoh0"
+        loading="lazy">
+    </iframe>
+</div>
+</div></main>
 </div>
 <div class="rutgers-footer">
     <div class="rutgers-footer-inner">
@@ -675,49 +684,6 @@
             if (popover.classList.contains('open')) positionPopover();
         }, {passive: true});
     }
-})();
-
-</script>
-<script>
-(() => {
-    'use strict';
-    document.querySelectorAll('.enquiry-form').forEach(form => {
-        const reason = form.elements.reason;
-        const counter = form.querySelector('.word-count');
-        const status = form.querySelector('.form-status');
-        const button = form.querySelector('button[type="submit"]');
-        const endpoint = form.dataset.endpoint;
-        if (!endpoint) {
-            button.disabled = true;
-            status.textContent = '';
-        }
-        function validateWords() {
-            const count = reason.value.trim().split(/\s+/u).filter(Boolean).length;
-            counter.textContent = `${count} / 500 words`;
-            reason.setCustomValidity(count > 500 ? 'Please limit your message to 500 words.' : '');
-        }
-        reason.addEventListener('input', validateWords);
-        form.addEventListener('submit', async event => {
-            event.preventDefault();
-            validateWords();
-            if (!form.reportValidity() || !endpoint) return;
-            const values = new FormData(form);
-            button.disabled = true;
-            status.textContent = 'Submitting your enquiry…';
-            try {
-                const response = await fetch(endpoint, {method:'POST', body:values, headers:{Accept:'application/json'}});
-                if (!response.ok) throw new Error('Submission failed');
-                status.textContent = 'Your enquiry has been submitted. Thank you.';
-                form.reset();
-                validateWords();
-            } catch {
-                status.textContent = 'We could not confirm submission. Your entries have been kept; please try again later.';
-            } finally {
-                button.disabled = false;
-            }
-        });
-        validateWords();
-    });
 })();
 
 </script>
