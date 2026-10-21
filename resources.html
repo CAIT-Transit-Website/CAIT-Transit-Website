@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resources — CAIT-Transit</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
           rel="stylesheet">
+
     <style>
         :root {
             --ink: #000000;
@@ -17,12 +19,14 @@
             --border: #E1E4EA;
             --scarlet: #CC0033;
             --scarlet-hover: #99001F;
-            --orange: #E8833D;
-            --green: #1F8A5F;
         }
 
         * {
             box-sizing: border-box;
+        }
+
+        [hidden] {
+            display: none !important;
         }
 
         body {
@@ -47,22 +51,16 @@
             font-size: 12px;
         }
 
-        .utility-inner {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 8px 28px;
-            letter-spacing: .03em;
-        }
-
         .topnav {
-            background: #000000;
+            background: #000;
             border-bottom: 1px solid #1a1a1a;
         }
 
         .topnav-inner {
+            position: relative;
             max-width: 1240px;
             margin: 0 auto;
-            padding: 24px 28px;
+            padding: 24px 82px 24px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -75,17 +73,21 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            min-width: 0;
+            max-width: 100%;
         }
 
         .brand-mark {
             height: 40px;
             width: auto;
+            max-width: 100%;
+            object-fit: contain;
             display: block;
         }
 
-
         .nav-links {
             display: flex;
+            flex-wrap: wrap;
             gap: 26px;
             font-size: 14px;
             font-weight: 500;
@@ -98,7 +100,8 @@
             border-bottom: 2px solid transparent;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: #fff;
             border-bottom-color: var(--scarlet);
         }
@@ -118,7 +121,7 @@
             letter-spacing: .08em;
             text-transform: uppercase;
             color: var(--scarlet);
-            background: rgba(204, 0, 51, .1); /* scarlet tint */
+            background: rgba(204, 0, 51, .1);
             padding: 5px 10px;
             border-radius: 5px;
             margin-bottom: 16px;
@@ -146,167 +149,327 @@
             padding: 8px 28px 64px;
         }
 
-        .res-grid {
+        /* Resource category cards */
+        .resource-grid {
             display: grid;
-            grid-template-columns:repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
         }
 
-        @media (max-width: 800px) {
-            .res-grid {
-                grid-template-columns:1fr;
-            }
-        }
-
-        .content-card {
-            background: var(--card);
+        .resource-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            aspect-ratio: 1;
+            padding: 22px;
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 22px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            transition: transform .22s ease, box-shadow .22s ease,
+                        background .22s ease, border-color .22s ease;
         }
 
-        .content-card h3 {
-            font-family: 'Archivo', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            margin: 0 0 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .resource-card:hover,
+        .resource-card:focus-visible {
+            background: #0B0B0C;
+            border-color: var(--scarlet);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 0 20px rgba(204, 0, 51, .3),
+                        0 16px 32px rgba(0, 0, 0, .22);
+            color: #fff;
         }
 
-        .content-card p {
-            font-size: 13.5px;
-            color: var(--slate);
-            line-height: 1.6;
-            margin: 0 0 10px;
+        .resource-card[aria-current="true"] {
+            border-color: var(--scarlet);
         }
 
-        .res-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: rgba(204, 0, 51, .1); /* scarlet tint */
+        .cap-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: rgba(204, 0, 51, .1);
             color: var(--scarlet);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            margin-bottom: 16px;
         }
 
-        .steps-list {
-            list-style: none;
+        .resource-card:hover .cap-icon,
+        .resource-card:focus-visible .cap-icon {
+            background: var(--scarlet);
+            color: #fff;
+        }
+
+        .cap-title {
+            font-family: 'Archivo', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
-        .steps-list li {
-            font-size: 13.5px;
-            color: var(--ink);
-            display: flex;
-            gap: 9px;
-            line-height: 1.5;
+        .resource-panel {
+            margin-top: 32px;
+            padding: 28px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            scroll-margin-top: 24px;
         }
 
-        .steps-list .num {
-            flex-shrink: 0;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--paper);
-            color: var(--slate);
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 10.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 1px;
+        .resource-panel h2 {
+            font-family: 'Archivo', sans-serif;
+            font-size: 24px;
+            margin: 0 0 12px;
         }
 
-        .def-item {
-            border-top: 1px solid var(--border);
-        }
-
-        .def-item:first-of-type {
-            border-top: none;
-        }
-
-        .def-toggle {
-            width: 100%;
-            background: none;
-            border: none;
-            text-align: left;
-            padding: 13px 0;
-            font-family: 'Inter', sans-serif;
+        .resource-panel p {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--ink);
-            cursor: pointer;
+            line-height: 1.6;
+            color: var(--slate);
+        }
+
+        /* Report and video links share the same styling */
+        .resource-list {
+            display: grid;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .report-link {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            gap: 24px;
+            padding: 24px;
+            background: #fff;
+            color: #000;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-decoration: none;
+            transition: background .22s ease, color .22s ease,
+                        border-color .22s ease, box-shadow .22s ease,
+                        transform .22s ease;
         }
 
-        .def-toggle .chev {
-            transition: transform .18s ease;
-            color: var(--slate);
-            flex-shrink: 0;
+        .report-link:hover,
+        .report-link:focus-visible {
+            background: #0B0B0C;
+            color: #fff;
+            border-color: var(--scarlet);
+            box-shadow: 0 0 20px rgba(204, 0, 51, .3),
+                        0 16px 32px rgba(0, 0, 0, .22);
+            transform: translateY(-4px);
         }
 
-        .def-toggle[aria-expanded="true"] .chev {
-            transform: rotate(180deg);
+        .report-link:focus-visible,
+        .resource-card:focus-visible,
+        .back-link:focus-visible {
+            outline: 2px solid var(--scarlet);
+            outline-offset: 4px;
         }
 
-        .def-body {
+        .report-link-title {
+            display: block;
+            font-family: 'Archivo', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .report-link-description {
+            display: block;
+            margin-top: 8px;
             font-size: 13px;
+            line-height: 1.55;
             color: var(--slate);
-            line-height: 1.6;
-            padding: 0 0 14px;
-            display: none;
         }
 
-        .def-body.open {
+        .report-link:hover .report-link-description,
+        .report-link:focus-visible .report-link-description {
+            color: rgba(255, 255, 255, .72);
+        }
+
+        .report-link-arrow {
+            flex-shrink: 0;
+            font-size: 24px;
+            color: var(--scarlet);
+        }
+
+        /* Embedded video viewing panels */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background .2s ease, color .2s ease,
+                        border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .back-link:hover {
+            background: #0B0B0C;
+            color: #fff;
+            border-color: var(--scarlet);
+            box-shadow: 0 0 16px rgba(204, 0, 51, .25);
+        }
+
+        .video-frame {
+            margin-top: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #000;
+        }
+
+        .video-frame video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .video-error {
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .video-error a {
+            color: var(--scarlet);
+        }
+
+        /* Header user guide */
+        .topnav-inner .guide-trigger {
+            position: absolute;
+            top: 29px;
+            right: 28px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 50%;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .guide-trigger:hover,
+        .guide-trigger[aria-expanded="true"] {
+            border-color: var(--scarlet);
+            background: rgba(204, 0, 51, .15);
+        }
+
+        .guide-trigger:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
+        }
+
+        .site-guide-popover {
+            position: fixed;
+            z-index: 200;
+            display: none;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            max-height: calc(100vh - 24px);
+            max-height: calc(100dvh - 24px);
+            overflow-y: auto;
+            padding: 20px 22px;
+            border-radius: 14px;
+            background: #fff;
+            color: #000;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .28);
+            font-family: 'Inter', sans-serif;
+            text-align: left;
+        }
+
+        .site-guide-popover.open {
             display: block;
         }
 
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        footer {
-            border-top: 1px solid var(--border);
-            background: var(--card);
-        }
-
-        .footer-inner {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 22px 28px;
+        .site-guide-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 12.5px;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .site-guide-header h3 {
+            margin: 0;
+            color: #000;
+            font: 700 15px 'Archivo', sans-serif;
+        }
+
+        .site-guide-close {
+            border: 0;
+            background: none;
             color: var(--slate);
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            padding: 2px 6px;
         }
 
-        .footer-tag {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
+        .site-guide-close:hover {
+            color: var(--scarlet);
+        }
+
+        .site-guide-sub {
+            margin: 0 0 12px;
+            color: var(--slate);
+            font-size: 13px;
+        }
+
+        .site-guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .site-guide-steps li {
+            display: flex;
+            gap: 9px;
+            color: #000;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .site-guide-steps .num {
+            display: flex;
+            flex: 0 0 18px;
+            align-items: center;
+            justify-content: center;
+            height: 18px;
+            margin-top: 1px;
+            border-radius: 50%;
             background: var(--paper);
-            border: 1px solid var(--border);
-            padding: 4px 9px;
-            border-radius: 5px;
+            color: var(--slate);
+            font: 10.5px 'IBM Plex Mono', monospace;
         }
 
+        /* Footer */
         .rutgers-footer {
-            background: #000000;
-            color: #FFFFFF;
+            background: #000;
+            color: #fff;
             margin-top: auto;
         }
 
@@ -327,272 +490,68 @@
         }
 
         .rutgers-footer-inner a {
-            color: #FFFFFF;
+            color: #fff;
             text-decoration: underline;
         }
+
+        @media (max-width: 1000px) {
+            .resource-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-panel {
+                padding: 20px;
+            }
+
+            .report-link {
+                padding: 20px;
+                gap: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .resource-card,
+            .report-link,
+            .back-link {
+                transition: none;
+            }
+
+            .resource-card:hover,
+            .resource-card:focus-visible,
+            .report-link:hover,
+            .report-link:focus-visible {
+                transform: none;
+            }
+        }
     </style>
-<style>
-/* Shared user-guide control for the site header. */
-.topnav-inner {
-    position: relative;
-    padding-right: 82px;
-}
-
-.topnav-inner .guide-trigger {
-    position: absolute;
-    top: 29px;
-    right: 28px;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, .25);
-    border-radius: 50%;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-}
-
-.topnav-inner .guide-trigger:hover,
-.topnav-inner .guide-trigger[aria-expanded="true"] {
-    border-color: #CC0033;
-    background: rgba(204, 0, 51, .15);
-}
-
-.topnav-inner .guide-trigger:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 4px;
-}
-
-.site-guide-popover {
-    position: fixed;
-    z-index: 200;
-    display: none;
-    width: 380px;
-    max-width: calc(100vw - 40px);
-    max-height: calc(100vh - 24px);
-    max-height: calc(100dvh - 24px);
-    overflow-y: auto;
-    padding: 20px 22px;
-    border-radius: 14px;
-    background: #fff;
-    color: #000;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, .28);
-    font-family: 'Inter', sans-serif;
-    text-align: left;
-}
-
-.site-guide-popover.open { display: block; }
-
-.site-guide-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 4px;
-}
-
-.site-guide-header h3 {
-    margin: 0;
-    color: #000;
-    font: 700 15px 'Archivo', sans-serif;
-}
-
-.site-guide-close {
-    border: 0;
-    background: none;
-    color: #6B7686;
-    cursor: pointer;
-    font-size: 20px;
-    line-height: 1;
-    padding: 2px 6px;
-}
-
-.site-guide-close:hover { color: #CC0033; }
-
-.site-guide-popover .site-guide-sub {
-    margin: 0 0 12px;
-    color: #6B7686;
-    font-size: 13px;
-}
-
-.site-guide-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.site-guide-steps li {
-    display: flex;
-    gap: 9px;
-    color: #000;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.site-guide-steps .num {
-    display: flex;
-    flex: 0 0 18px;
-    align-items: center;
-    justify-content: center;
-    height: 18px;
-    margin-top: 1px;
-    border-radius: 50%;
-    background: #F5F6F8;
-    color: #6B7686;
-    font: 10.5px 'IBM Plex Mono', monospace;
-}
-
-</style>
-<style>
-.resource-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
-.resource-card { display:block; aspect-ratio:1; padding:22px; border:1px solid var(--border); border-radius:14px; background:#fff; color:#000; text-decoration:none; transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease; }
-.resource-card:hover,.resource-card:focus-visible { background:#0B0B0C; border-color:#CC0033; transform:translateY(-6px) scale(1.03); box-shadow:0 0 20px rgba(204,0,51,.3),0 16px 32px rgba(0,0,0,.22); color:#fff; }
-.resource-card[aria-current="true"] { border-color:#CC0033; }
-.resource-card .cap-icon { width:38px;height:38px;border-radius:9px;background:rgba(204,0,51,.1);color:#CC0033;display:flex;align-items:center;justify-content:center;margin-bottom:16px; }
-.resource-card:hover .cap-icon,.resource-card:focus-visible .cap-icon { background:#CC0033;color:#fff; }
-.resource-card .cap-title { font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;margin-bottom:8px; }
-.resource-card .cap-sub { font-size:13px;color:var(--slate);line-height:1.55; }
-.resource-card:hover .cap-sub,.resource-card:focus-visible .cap-sub { color:rgba(255,255,255,.72); }
-.resource-panel { margin-top:32px;padding:28px;background:#fff;border:1px solid var(--border);border-radius:14px;scroll-margin-top:24px; }
-.resource-panel h2 { font-family:'Archivo',sans-serif;font-size:24px;margin:0 0 12px; }
-.resource-panel p { font-size:14px;line-height:1.6;color:var(--slate); }
-.resource-panel[hidden] { display:none; }
-.enquiry-form { margin-top:22px; }
-.form-field { display:flex;flex-direction:column;gap:7px;margin-bottom:16px; }
-.form-field label { font-size:13px;font-weight:600; }
-.form-field input,.form-field textarea { width:100%;padding:11px 12px;font:14px 'Inter',sans-serif;color:#000;background:#fff;border:1px solid var(--border);border-radius:7px; }
-.form-field textarea { min-height:160px;resize:vertical; }
-.form-field input:focus,.form-field textarea:focus { outline:2px solid #CC0033;outline-offset:2px; }
-.word-count,.form-note,.form-status { font-size:12px;line-height:1.5;color:var(--slate); }
-.enquiry-submit { background:#CC0033;color:#fff;border:0;border-radius:999px;padding:12px 22px;font:600 14px 'Inter',sans-serif;cursor:pointer; }
-.enquiry-submit:hover { background:#99001F; }
-.enquiry-submit:disabled { opacity:.5;cursor:not-allowed; }
-.enquiry-submit:focus-visible { outline:2px solid #000;outline-offset:3px; }
-.capability-card[href] { display:block;text-decoration:none; }
-.capability-card[href]:focus-visible { outline:2px solid #CC0033;outline-offset:4px; }
-@media(max-width:1000px) { .resource-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-@media(max-width:560px) { .resource-grid { grid-template-columns:1fr; } }
-
-.resource-card { display:flex;flex-direction:column;justify-content:center;align-items:flex-start; }
-.resource-card .cap-title { margin:0; }
-.support-layout { display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,1.3fr);gap:72px;align-items:start;background:#fff;border:1px solid var(--border);border-radius:20px;padding:48px; }
-.support-intro h2 { font-family:'Archivo',sans-serif;font-size:clamp(32px,4vw,48px);line-height:1.08;letter-spacing:-.025em;margin:16px 0 24px; }
-.support-intro p { color:var(--slate);font-size:14px;line-height:1.75;max-width:320px; }
-.support-accent { display:block;width:44px;height:4px;background:#CC0033;border-radius:2px; }
-.support-layout .enquiry-form { margin:0;min-width:0; }
-.form-name-row { display:grid;grid-template-columns:1fr 1fr;gap:18px; }
-.support-layout .form-field { margin-bottom:22px;gap:9px; }
-.support-layout .form-field input,.support-layout .form-field select,.support-layout .form-field textarea { width:100%;min-width:0;background:#FAFAFB;border:1px solid #D5D9E0;border-radius:8px;padding:14px 16px;font:14px 'Inter',sans-serif;color:#000; }
-.support-layout .form-field select { min-height:48px; }
-.support-layout .form-field textarea { min-height:180px; }
-.support-layout .form-field select:focus { outline:2px solid #CC0033;outline-offset:2px; }
-.support-layout .enquiry-submit { width:100%;border-radius:8px;padding:16px; }
-.support-layout .word-count { text-align:right; }
-.support-content { width:100%; }
-.nav-links { flex-wrap:wrap; }
-.brand { min-width:0;max-width:100%; }
-.brand-mark { max-width:100%;object-fit:contain; }
-@media(max-width:800px) { .support-layout { grid-template-columns:1fr;gap:28px;padding:28px; } .support-intro p { max-width:100%; } }
-@media(max-width:460px) { .form-name-row { grid-template-columns:1fr;gap:0; } .support-layout { padding:22px; } }
-
-/* Report links: same theme as the existing resource cards */
-.report-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 24px;
-    background: #fff;
-    color: #000;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    text-decoration: none;
-    transition: background .22s ease, color .22s ease,
-                border-color .22s ease, box-shadow .22s ease,
-                transform .22s ease;
-}
-
-.report-link:hover,
-.report-link:focus-visible {
-    background: #0B0B0C;
-    color: #fff;
-    border-color: #CC0033;
-    box-shadow: 0 0 20px rgba(204, 0, 51, .3),
-                0 16px 32px rgba(0, 0, 0, .22);
-    transform: translateY(-4px);
-}
-
-.report-link:focus-visible {
-    outline: 2px solid #CC0033;
-    outline-offset: 4px;
-}
-
-.report-link-title {
-    display: block;
-    font-family: 'Archivo', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.4;
-}
-
-.report-link-description {
-    display: block;
-    margin-top: 8px;
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--slate);
-}
-
-.report-link:hover .report-link-description,
-.report-link:focus-visible .report-link-description {
-    color: rgba(255, 255, 255, .72);
-}
-
-.report-link-arrow {
-    flex-shrink: 0;
-    font-size: 24px;
-    color: #CC0033;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .report-link {
-        transition: none;
-    }
-
-    .report-link:hover,
-    .report-link:focus-visible {
-        transform: none;
-    }
-}    
-</style>
 </head>
-<body>
 
+<body>
 <div class="page-wrap">
-    <div class="utility-bar">
-        <!-- <div class="utility-inner">RUTGERS TRANSIT ANALYTICS</div> -->
-    </div>
+    <div class="utility-bar"></div>
 
     <div class="topnav">
         <div class="topnav-inner">
             <a href="index.html" class="brand">
-                <img class="brand-mark" src="SL_2primary_RED_WHITE.png"
+                <img class="brand-mark"
+                     src="SL_2primary_RED_WHITE.png"
                      alt="Rutgers New Brunswick — Center for Advanced Infrastructure and Transportation">
             </a>
-            <nav class="nav-links">
+
+            <nav class="nav-links" aria-label="Main navigation">
                 <a href="index.html">Home</a>
                 <a href="projects.html">Projects</a>
-                <a href="resources.html" class="active">Resources</a>
+                <a href="resources.html" class="active" aria-current="page">Resources</a>
                 <a href="support.html">Support</a>
-                <a href="https://newbrunswick.rutgers.edu" target="_blank" rel="noopener noreferrer">Visit
-                    Rutgers.edu</a>
+                <a href="https://newbrunswick.rutgers.edu"
+                   target="_blank"
+                   rel="noopener noreferrer">Visit Rutgers.edu</a>
             </nav>
         </div>
     </div>
@@ -600,107 +559,218 @@
     <header class="page-header">
         <span class="eyebrow">Site-wide</span>
         <h1>Resources</h1>
-        <p class="page-sub">Explore reports, optimization models, warehouse analytics, and transportation research.</p>
+        <p class="page-sub">
+            Explore reports, project videos, warehouse analytics, and transportation research.
+        </p>
     </header>
 
     <main class="page-content">
-<div class="resource-grid">
-<a class="resource-card" href="#reports" aria-controls="reports">
-            <div class="cap-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="12" width="4" height="8" rx="1"/>
-                    <rect x="10" y="7" width="4" height="13" rx="1"/>
-                    <rect x="17" y="3" width="4" height="17" rx="1"/>
-                </svg>
-            </div>
-            <div class="cap-title">Reports</div>
-            
-        </a>
-<a class="resource-card" href="#optimization-models" aria-controls="optimization-models">
-            <div class="cap-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-            </div>
-            <div class="cap-title">Optimization Models</div>
-            
-        </a>
-<a class="resource-card" href="#warehouse-analytics" aria-controls="warehouse-analytics">
-            <div class="cap-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="1" y="7" width="15" height="10" rx="1"/>
-                    <path d="M16 10h4l3 3v4h-7z"/>
-                    <circle cx="6.5" cy="19.5" r="1.5"/>
-                    <circle cx="18.5" cy="19.5" r="1.5"/>
-                </svg>
-            </div>
-            <div class="cap-title">Warehouse Analytics</div>
-            
-        </a>
-<a class="resource-card" href="#transportation-research" aria-controls="transportation-research">
-            <div class="cap-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M4 16V6a2 2 0 0 1 2-2h9l5 5v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
-                    <path d="M4 16h16M8 20h.01M16 20h.01"/>
-                </svg>
-            </div>
-            <div class="cap-title">Transportation Research</div>
-            
-        </a>
-</div>
-<section class="resource-panel" hidden id="reports" aria-labelledby="reports-title">
-    <h2 id="reports-title">Reports</h2>
+        <div class="resource-grid">
+            <a class="resource-card" href="#reports" aria-controls="reports">
+                <div class="cap-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
+                        <rect x="3" y="12" width="4" height="8" rx="1"/>
+                        <rect x="10" y="7" width="4" height="13" rx="1"/>
+                        <rect x="17" y="3" width="4" height="17" rx="1"/>
+                    </svg>
+                </div>
+                <div class="cap-title">Reports</div>
+            </a>
 
-    <a class="report-link" href="pims-dashboard-methodology-guide.html">
-        <span>
-            <span class="report-link-title">
-                PiMS Dashboard: Methodology and User Guide
-            </span>
+            <a class="resource-card" href="#project-videos" aria-controls="project-videos">
+                <div class="cap-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="16" rx="3"/>
+                        <path d="M10 8l6 4-6 4z"/>
+                    </svg>
+                </div>
+                <div class="cap-title">Project Videos</div>
+            </a>
 
-            <span class="report-link-description">
-                Learn how the PiMS dashboards use inventory data to support replenishment, cycle counting, warehouse planning, and operational decisions.
-            </span>
-        </span>
+            <a class="resource-card" href="#warehouse-analytics"
+               aria-controls="warehouse-analytics">
+                <div class="cap-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
+                        <rect x="1" y="7" width="15" height="10" rx="1"/>
+                        <path d="M16 10h4l3 3v4h-7z"/>
+                        <circle cx="6.5" cy="19.5" r="1.5"/>
+                        <circle cx="18.5" cy="19.5" r="1.5"/>
+                    </svg>
+                </div>
+                <div class="cap-title">Warehouse Analytics</div>
+            </a>
 
-        <span class="report-link-arrow" aria-hidden="true">→</span>
-    </a>
-</section>
-<section class="resource-panel" hidden id="optimization-models" aria-labelledby="optimization-models-title"><h2 id="optimization-models-title">Optimization Models</h2><p>No documents have been published in this section yet.</p></section>
-<section class="resource-panel" hidden id="warehouse-analytics" aria-labelledby="warehouse-analytics-title"><h2 id="warehouse-analytics-title">Warehouse Analytics</h2><p>No documents have been published in this section yet.</p></section>
-<section class="resource-panel" hidden id="transportation-research" aria-labelledby="transportation-research-title"><h2 id="transportation-research-title">Transportation Research</h2><p>No documents have been published in this section yet.</p></section>
-</main>
+            <a class="resource-card" href="#transportation-research"
+               aria-controls="transportation-research">
+                <div class="cap-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.8"
+                         aria-hidden="true">
+                        <path d="M4 16V6a2 2 0 0 1 2-2h9l5 5v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
+                        <path d="M4 16h16M8 20h.01M16 20h.01"/>
+                    </svg>
+                </div>
+                <div class="cap-title">Transportation Research</div>
+            </a>
+        </div>
+
+        <!-- Reports -->
+        <section class="resource-panel" hidden id="reports"
+                 aria-labelledby="reports-title">
+            <h2 id="reports-title" tabindex="-1">Reports</h2>
+
+            <a class="report-link" href="pims-dashboard-methodology-guide.html">
+                <span>
+                    <span class="report-link-title">
+                        PiMS Dashboard: Methodology and User Guide
+                    </span>
+                    <span class="report-link-description">
+                        Learn how the PiMS dashboards use inventory data to support replenishment, cycle counting, warehouse planning, and operational decisions.
+                    </span>
+                </span>
+                <span class="report-link-arrow" aria-hidden="true">→</span>
+            </a>
+        </section>
+
+        <!-- Project video selection -->
+        <section class="resource-panel" hidden id="project-videos"
+                 aria-labelledby="project-videos-title">
+            <h2 id="project-videos-title" tabindex="-1">Project Videos</h2>
+
+            <div class="resource-list">
+                <a class="report-link" href="#pims-decision-making-platform">
+                    <span>
+                        <span class="report-link-title">
+                            PiMS Decision Making Platform
+                        </span>
+                        <span class="report-link-description">
+                            Introducing a decision-making platform to help transit agencies make better, faster decisions.
+                        </span>
+                    </span>
+                    <span class="report-link-arrow" aria-hidden="true">→</span>
+                </a>
+
+                <a class="report-link" href="#pims-dashboard-walkthrough">
+                    <span>
+                        <span class="report-link-title">
+                            PiMS Dashboard Walkthrough
+                        </span>
+                        <span class="report-link-description">
+                            A detailed, scenario-based explanation of the dashboard, demonstrating its value through real-world use cases.
+                        </span>
+                    </span>
+                    <span class="report-link-arrow" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Decision Making Platform player -->
+        <section class="resource-panel video-panel" hidden
+                 id="pims-decision-making-platform"
+                 data-category="project-videos"
+                 aria-labelledby="decision-video-title">
+            <a class="back-link" href="#project-videos">
+                <span aria-hidden="true">←</span> Back to Project Videos
+            </a>
+
+            <h2 id="decision-video-title" tabindex="-1">
+                PiMS Decision Making Platform
+            </h2>
+            <p>
+                Introducing a decision-making platform to help transit agencies make better, faster decisions.
+            </p>
+
+            <div class="video-frame">
+                <video controls playsinline preload="none"
+                       data-src="pims-decision-making-platform.mp4"
+                       aria-label="PiMS Decision Making Platform video">
+                    Your browser does not support embedded video.
+                    <a href="pims-decision-making-platform.mp4">Open the MP4 video</a>.
+                </video>
+            </div>
+
+            <p class="video-error" role="status" hidden>
+                The video could not be loaded.
+                <a href="pims-decision-making-platform.mp4"
+                   target="_blank" rel="noopener">Open the MP4 directly</a>.
+            </p>
+        </section>
+
+        <!-- Dashboard Walkthrough player -->
+        <section class="resource-panel video-panel" hidden
+                 id="pims-dashboard-walkthrough"
+                 data-category="project-videos"
+                 aria-labelledby="walkthrough-video-title">
+            <a class="back-link" href="#project-videos">
+                <span aria-hidden="true">←</span> Back to Project Videos
+            </a>
+
+            <h2 id="walkthrough-video-title" tabindex="-1">
+                PiMS Dashboard Walkthrough
+            </h2>
+            <p>
+                A detailed, scenario-based explanation of the dashboard, demonstrating its value through real-world use cases.
+            </p>
+
+            <div class="video-frame">
+                <video controls playsinline preload="none"
+                       data-src="Dashboard%20Walkthrough%20video.mp4"
+                       aria-label="PiMS Dashboard Walkthrough video">
+                    Your browser does not support embedded video.
+                    <a href="Dashboard%20Walkthrough%20video.mp4">Open the MP4 video</a>.
+                </video>
+            </div>
+
+            <p class="video-error" role="status" hidden>
+                The video could not be loaded.
+                <a href="Dashboard%20Walkthrough%20video.mp4"
+                   target="_blank" rel="noopener">Open the MP4 directly</a>.
+            </p>
+        </section>
+
+        <section class="resource-panel" hidden id="warehouse-analytics"
+                 aria-labelledby="warehouse-analytics-title">
+            <h2 id="warehouse-analytics-title" tabindex="-1">Warehouse Analytics</h2>
+            <p>No documents have been published in this section yet.</p>
+        </section>
+
+        <section class="resource-panel" hidden id="transportation-research"
+                 aria-labelledby="transportation-research-title">
+            <h2 id="transportation-research-title" tabindex="-1">Transportation Research</h2>
+            <p>No documents have been published in this section yet.</p>
+        </section>
+    </main>
 </div>
 
 <div class="rutgers-footer">
     <div class="rutgers-footer-inner">
-        <p>Rutgers is an equal access/equal opportunity institution. Individuals with disabilities are encouraged to
-            direct suggestions, comments, or complaints concerning any accessibility issues with Rutgers websites to <a
-                    href="mailto:accessibility@rutgers.edu">accessibility@rutgers.edu</a> or complete the <a
-                    href="https://it.rutgers.edu/it-accessibility-initiative/barrierform/" target="_blank"
-                    rel="noopener noreferrer">Report Accessibility Barrier / Provide Feedback</a> form.</p>
-        <p><a href="https://www.rutgers.edu/copyright-information" target="_blank" rel="noopener noreferrer">Copyright
-            ©2026</a>, <a href="https://www.rutgers.edu/" target="_blank" rel="noopener noreferrer">Rutgers, The State
-            University of New Jersey</a>. All rights reserved. Contact webmaster</p>
+        <p>
+            Rutgers is an equal access/equal opportunity institution. Individuals with disabilities are encouraged to
+            direct suggestions, comments, or complaints concerning any accessibility issues with Rutgers websites to
+            <a href="mailto:accessibility@rutgers.edu">accessibility@rutgers.edu</a>
+            or complete the
+            <a href="https://it.rutgers.edu/it-accessibility-initiative/barrierform/"
+               target="_blank" rel="noopener noreferrer">Report Accessibility Barrier / Provide Feedback</a>
+            form.
+        </p>
+        <p>
+            <a href="https://www.rutgers.edu/copyright-information"
+               target="_blank" rel="noopener noreferrer">Copyright ©2026</a>,
+            <a href="https://www.rutgers.edu/"
+               target="_blank" rel="noopener noreferrer">Rutgers, The State University of New Jersey</a>.
+            All rights reserved. Contact webmaster
+        </p>
     </div>
 </div>
 
 <script>
-    document.querySelectorAll('.def-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const body = btn.nextElementSibling;
-            const isOpen = body.classList.contains('open');
-            body.classList.toggle('open', !isOpen);
-            btn.setAttribute('aria-expanded', String(!isOpen));
-        });
-    });
-</script>
-<script>
-/* Adds the same user guide to each page's existing black navigation banner. */
+/* Shared header user guide */
 (() => {
     'use strict';
 
@@ -728,13 +798,14 @@
     popover.innerHTML = `
         <div class="site-guide-header">
             <h3 id="guidePopoverTitle">User Guide</h3>
-            <button type="button" class="site-guide-close" aria-label="Close user guide">&times;</button>
+            <button type="button" class="site-guide-close"
+                    aria-label="Close user guide">&times;</button>
         </div>
         <p class="site-guide-sub">How to get around the site:</p>
         <ol class="site-guide-steps">
             <li><span class="num">1</span><span><strong>Home</strong> gives an overview of the Rutgers–Transit partnership and highlights the current featured project.</span></li>
             <li><span class="num">2</span><span><strong>Projects</strong> lists every project, each linking to its own full page.</span></li>
-            <li><span class="num">3</span><span><strong>Resources</strong> covers site-wide documentation and links to available reports.</span></li>
+            <li><span class="num">3</span><span><strong>Resources</strong> provides reports, project videos, warehouse analytics, and transportation research.</span></li>
             <li><span class="num">4</span><span><strong>Support</strong> is where to go for questions concerning the dashboard.</span></li>
         </ol>`;
     document.body.append(popover);
@@ -746,8 +817,13 @@
     function positionPopover() {
         const rect = trigger.getBoundingClientRect();
         const margin = 12;
-        popover.style.right = `${Math.max(margin, innerWidth - rect.right)}px`;
-        popover.style.top = `${Math.max(margin, Math.min(rect.bottom + 8, innerHeight - popover.offsetHeight - margin))}px`;
+        popover.style.right =
+            `${Math.max(margin, innerWidth - rect.right)}px`;
+        popover.style.top =
+            `${Math.max(margin, Math.min(
+                rect.bottom + 8,
+                innerHeight - popover.offsetHeight - margin
+            ))}px`;
     }
 
     function openPopover() {
@@ -770,7 +846,10 @@
     function scheduleClose() {
         cancelClose();
         closeTimer = setTimeout(() => {
-            if (!pinnedOpen && !trigger.matches(':hover') && !popover.matches(':hover') && !popover.contains(document.activeElement)) {
+            if (!pinnedOpen &&
+                !trigger.matches(':hover') &&
+                !popover.matches(':hover') &&
+                !popover.contains(document.activeElement)) {
                 closePopover();
             }
         }, 250);
@@ -780,46 +859,135 @@
     trigger.addEventListener('mouseleave', scheduleClose);
     trigger.addEventListener('click', event => {
         event.stopPropagation();
-        if (pinnedOpen) closePopover();
-        else { pinnedOpen = true; openPopover(); }
+        if (pinnedOpen) {
+            closePopover();
+        } else {
+            pinnedOpen = true;
+            openPopover();
+        }
     });
+
     popover.addEventListener('mouseenter', cancelClose);
     popover.addEventListener('mouseleave', scheduleClose);
     popover.addEventListener('focusin', cancelClose);
     popover.addEventListener('focusout', scheduleClose);
-    popover.querySelector('.site-guide-close').addEventListener('click', () => closePopover(true));
+
+    popover.querySelector('.site-guide-close')
+        .addEventListener('click', () => closePopover(true));
+
     document.addEventListener('click', event => {
-        if (!popover.contains(event.target) && !trigger.contains(event.target)) closePopover();
+        if (!popover.contains(event.target) &&
+            !trigger.contains(event.target)) {
+            closePopover();
+        }
     });
+
     document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && popover.classList.contains('open')) closePopover(popover.contains(document.activeElement));
+        if (event.key === 'Escape' &&
+            popover.classList.contains('open')) {
+            closePopover(popover.contains(document.activeElement));
+        }
     });
+
     for (const name of ['resize', 'scroll']) {
         window.addEventListener(name, () => {
             if (popover.classList.contains('open')) positionPopover();
-        }, {passive: true});
+        }, { passive: true });
     }
 })();
-
 </script>
+
 <script>
+/* Resource navigation and embedded video playback */
 (() => {
     'use strict';
+
     const panels = [...document.querySelectorAll('.resource-panel')];
-    const links = [...document.querySelectorAll('.resource-card')];
-    function showCategory() {
-        const active = panels.find(panel => `#${panel.id}` === location.hash);
-        panels.forEach(panel => { panel.hidden = panel !== active; });
-        links.forEach(link => {
-            if (active && link.hash === `#${active.id}`) link.setAttribute('aria-current', 'true');
-            else link.removeAttribute('aria-current');
+    const categoryLinks = [...document.querySelectorAll('.resource-card')];
+    const videos = [...document.querySelectorAll('.video-panel video')];
+
+    videos.forEach(video => {
+        video.addEventListener('error', () => {
+            const message = video.closest('.video-panel')
+                .querySelector('.video-error');
+            message.hidden = false;
         });
-        if (active) active.scrollIntoView({block: 'start'});
+
+        video.addEventListener('loadedmetadata', () => {
+            const message = video.closest('.video-panel')
+                .querySelector('.video-error');
+            message.hidden = true;
+        });
+    });
+
+    function showCategory(moveFocus = false) {
+        let hash = location.hash;
+
+        // Preserve older links from the Home page.
+        if (hash === '#optimization-models') {
+            hash = '#project-videos';
+            history.replaceState(null, '', hash);
+        }
+
+        const active = panels.find(panel => `#${panel.id}` === hash);
+
+        panels.forEach(panel => {
+            panel.hidden = panel !== active;
+        });
+
+        const category = active
+            ? active.dataset.category || active.id
+            : '';
+
+        categoryLinks.forEach(link => {
+            if (link.hash === `#${category}`) {
+                link.setAttribute('aria-current', 'true');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+
+        // Stop audio when leaving a video.
+        videos.forEach(video => {
+            if (video.closest('.resource-panel') !== active) {
+                video.pause();
+            }
+        });
+
+        if (!active) return;
+
+        // Load a video's source only when its viewing panel is opened.
+        const video = active.querySelector('video');
+        if (video && !video.hasAttribute('src')) {
+            video.preload = 'metadata';
+            video.src = video.dataset.src;
+            video.load();
+        }
+
+        requestAnimationFrame(() => {
+            if (moveFocus) {
+                active.querySelector('h2')?.focus({ preventScroll: true });
+            }
+            active.scrollIntoView({ block: 'start', behavior: 'auto' });
+        });
     }
-    window.addEventListener('hashchange', showCategory);
+
+    window.addEventListener('hashchange', () => showCategory(true));
+
+    // Clicking the currently active category still returns to its panel.
+    document.querySelector('.page-content').addEventListener('click', event => {
+        const link = event.target.closest('a[href^="#"]');
+        if (!link || event.ctrlKey || event.metaKey ||
+            event.shiftKey || event.altKey) return;
+
+        if (link.hash === location.hash) {
+            event.preventDefault();
+            showCategory(true);
+        }
+    });
+
     showCategory();
 })();
-
 </script>
 </body>
 </html>
