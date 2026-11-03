@@ -339,6 +339,13 @@
             object-fit: contain;
             background: #000;
         }
+        .video-frame iframe {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+            background: #000;
+        }
 
         .video-error {
             padding: 14px 16px;
@@ -667,6 +674,15 @@
                     </span>
                     <span class="report-link-arrow" aria-hidden="true">→</span>
                 </a>
+                <a class="report-link" href="#mmc-lidar-scan">
+                    <span>
+                        <span class="report-link-title">MMC LiDAR Scan</span>
+                        <span class="report-link-description">
+                            Explore a moving 3D view of the MMC facility captured through LiDAR scanning.
+                        </span>
+                    </span>
+                    <span class="report-link-arrow" aria-hidden="true">→</span>
+                </a>
             </div>
         </section>
 
@@ -733,6 +749,40 @@
                    target="_blank" rel="noopener">Open the MP4 directly</a>.
             </p>
         </section>
+
+<!-- MMC LiDAR Scan player -->
+        <section class="resource-panel video-panel" hidden
+                 id="mmc-lidar-scan"
+                 data-category="project-videos"
+                 aria-labelledby="lidar-video-title">
+        
+            <a class="back-link" href="#project-videos">
+                <span aria-hidden="true">←</span> Back to Project Videos
+            </a>
+        
+            <h2 id="lidar-video-title" tabindex="-1">MMC LiDAR Scan</h2>
+            <p>
+                Explore a moving 3D view of the MMC facility captured through LiDAR scanning.
+            </p>
+        
+            <div class="video-frame">
+                <iframe
+                    data-src="https://www.youtube-nocookie.com/embed/a6V8YeEClXM"
+                    title="MMC LiDAR Scan — 3D facility fly-through"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        
+            <p>
+                Having trouble playing the video?
+                <a href="https://youtu.be/a6V8YeEClXM"
+                   target="_blank" rel="noopener noreferrer">
+                    Watch on YouTube
+                </a>.
+            </p>
+        </section>    
 
         <section class="resource-panel" hidden id="warehouse-analytics"
                  aria-labelledby="warehouse-analytics-title">
@@ -954,6 +1004,19 @@
             }
         });
 
+        // Load the YouTube player when opened; stop playback when leaving.
+        document.querySelectorAll('.video-panel iframe[data-src]')
+        .forEach(frame => {
+        const isActive =
+            frame.closest('.resource-panel') === active;
+
+        if (isActive && !frame.hasAttribute('src')) {
+            frame.src = frame.dataset.src;
+        } else if (!isActive && frame.hasAttribute('src')) {
+            frame.removeAttribute('src');
+        }
+        });
+        
         if (!active) return;
 
         // Load a video's source only when its viewing panel is opened.
